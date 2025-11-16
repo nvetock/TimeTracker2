@@ -51,14 +51,14 @@ namespace timetracker
             return mSessionId;
         }
 
-        [[nodiscard]] const QString& getTakeName() const
-        {
-            return mTaskName;
-        }
-
         [[nodiscard]] const QString& getProjectName() const
         {
             return mProjectName;
+        }
+
+        [[nodiscard]] const QString& getTaskName() const
+        {
+            return mTaskName;
         }
 
         [[nodiscard]] const QString& getUserName() const
@@ -79,6 +79,11 @@ namespace timetracker
         [[nodiscard]] const QTime& getEndTime() const
         {
             return mEndTime;
+        }
+
+        [[nodiscard]] const QTime& getPauseStartTime() const
+        {
+            return mPauseStartTime;
         }
 
         [[nodiscard]] qint64 getInactiveSeconds() const
