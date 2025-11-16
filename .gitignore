@@ -1,0 +1,80 @@
+# ===========================
+# CLion / JetBrains
+# ===========================
+.idea/
+cmake-build*/
+*.iml
+
+# ===========================
+# CMake build artifacts
+# ===========================
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+CTestTestfile.cmake
+Makefile
+build/
+out/
+bin/
+lib/
+
+# Ninja build files (if used)
+*.ninja
+.ninja_deps
+.ninja_log
+
+# ===========================
+# MinGW / GCC Build Outputs
+# ===========================
+*.exe
+*.dll
+*.pdb
+*.a
+*.lib
+*.o
+*.obj
+
+# ===========================
+# Qt build outputs
+# ===========================
+moc_*.cpp
+moc_*.h
+*.moc
+*.qrc.dep
+qrc_*.cpp
+ui_*.h
+
+# Qt Creator temporary files (if ever opened)
+*.pro.user
+*.pro.user.*
+*.qmlc
+*.jsc
+*.cache/
+
+# ===========================
+# Auto-generated Qt resource files
+# ===========================
+*.qmake.stash
+
+# ===========================
+# Backup / Temp files
+# ===========================
+*.log
+*.tmp
+*.temp
+*.DS_Store
+Thumbs.db
+
+# ===========================
+# Windows-specific
+# ===========================
+*.manifest
+*.res
+*.rc
+*.ilk
+
+# ===========================
+# Python virtualenv (if used for scripts)
+# ===========================
+venv/
+.env/
