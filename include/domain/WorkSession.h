@@ -11,17 +11,21 @@ namespace timetracker
 
         WorkSession();
         ~WorkSession() = default;
+
         void start(const QString& userName,
                    const QString& projectName,
                    const QString& taskName,
                    const QString& taskDescription = "",
-                   const QDateTime& startTime = QDateTime::currentDateTimeUtc());
+                   const QTime& startTime = QTime::currentTime());
 
-        void stop(const QDateTime& endTime = QDateTime::currentDateTimeUtc(),
+        void stop(const QTime& endTime = QTime::currentTime(),
                   bool aborted = false);
 
-        qint64 totalElapsedSeconds() const;
-        qint64 activeSeconds() const;
+        void pause(const QTime& pauseTime = QTime::currentTime());
+        void unpause(const QTime& unpauseTime = QTime::currentTime());
+
+        qint64 getTotalElapsedSeconds() const;
+        qint64 getActiveSeconds() const;
         void addInactivity(qint64 seconds);
 
     private:
@@ -33,8 +37,9 @@ namespace timetracker
         QString mTaskName;
         QString mUserName;
         QString mTaskDesc;
-        QDateTime mStartTime;
-        QDateTime mEndTime;
+        QTime mStartTime;
+        QTime mEndTime;
+        QTime mPauseStartTime;
         qint64 mInactiveSeconds;
         Status mStatus;
 
@@ -66,12 +71,12 @@ namespace timetracker
             return mTaskDesc;
         }
 
-        [[nodiscard]] const QDateTime& getStartTime() const
+        [[nodiscard]] const QTime& getStartTime() const
         {
             return mStartTime;
         }
 
-        [[nodiscard]] const QDateTime& getEndTime() const
+        [[nodiscard]] const QTime& getEndTime() const
         {
             return mEndTime;
         }
