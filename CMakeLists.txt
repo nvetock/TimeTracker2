@@ -35,8 +35,17 @@ set(TIMETRACKER_SOURCES
 
         # idle detector linking
         include/idle/IdleDetectorFactory.h
+        src/MacIdleDetector.cpp
+        src/WinIdleDetector.cpp
+        src/IdleDetectorFactory.cpp
 
         # application service linking
+        include/appservice/ActivityMonitor.h
+        src/ActivityMonitor.cpp
+        include/appservice/AppController.h
+        src/AppController.cpp
+        include/appservice/ReminderScheduler.h
+        src/ReminderScheduler.cpp
         include/appservice/SessionManager.h
         src/SessionManager.cpp
 

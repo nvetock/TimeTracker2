@@ -10,8 +10,9 @@ namespace timetracker
         Q_OBJECT
 
     public:
-        AppController(class SessionManager* sMgr,
-                      class ActivityMonitor aMtr,
+        AppController(class ActivityMonitor aMtr,
+                      class ReminderScheduler* rSched,
+                      class SessionManager* sMgr,
                       QObject* parent = nullptr);
 
         /**
@@ -76,7 +77,9 @@ namespace timetracker
 
 
     private:
-        class SessionManager* sessionMgr;
         class ActivityMonitor* activityMtr;
+        class ReminderScheduler* reminderSched;
+        class SessionManager* sessionMgr;
+
     };
 } // timetracker
