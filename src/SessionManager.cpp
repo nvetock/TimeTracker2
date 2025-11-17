@@ -62,7 +62,7 @@ namespace timetracker
         }
     }
 
-    void SessionManager::onPauseSession()
+    void SessionManager::onUserIdle()
     {
         if (mCurrentSession == nullptr)
         {
@@ -74,7 +74,7 @@ namespace timetracker
         emit sessionPaused(*mCurrentSession);
     }
 
-    void SessionManager::onUnpauseSession()
+    void SessionManager::onUserNotIdle()
     {
         if (mCurrentSession == nullptr)
         {

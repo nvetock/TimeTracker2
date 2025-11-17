@@ -11,8 +11,8 @@ namespace timetracker
 
     public:
         AppController(class SessionManager* sMgr,
-            QObject* parent = nullptr);
-        ~AppController() = default;
+                      class ActivityMonitor aMtr,
+                      QObject* parent = nullptr);
 
         /**
          * Initializes different service mgr objects.
@@ -77,6 +77,6 @@ namespace timetracker
 
     private:
         class SessionManager* sessionMgr;
-
+        class ActivityMonitor* activityMtr;
     };
 } // timetracker

@@ -1,4 +1,4 @@
-#include "ActivityMonitor.h"
+#include "../include/appservice/ActivityMonitor.h"
 
 #include <QDebug>
 

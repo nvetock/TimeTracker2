@@ -35,8 +35,16 @@ namespace timetracker
         void onStartSession(const QString& userName,
                 const QString& projectName, const QString& taskName,
                 const QString& taskDescript="");
-        void onPauseSession();
-        void onUnpauseSession();
+        /**
+         * When a user goes idle this slot will handle how the
+         * data collection occurring in WorkSession will respond.
+         */
+        void onUserIdle();
+        /**
+         * Handles a user becoming active again, creates a small update in
+         * WorkSession data object then resumes.
+         */
+        void onUserNotIdle();
         void onStopSession(bool aborted = false);
 
     private:
