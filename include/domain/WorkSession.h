@@ -37,6 +37,7 @@ namespace timetracker
         QString mTaskName;
         QString mUserName;
         QString mTaskDesc;
+        QDate mCreationDate;
         QTime mStartTime;
         QTime mEndTime;
         QTime mPauseStartTime;
@@ -69,6 +70,11 @@ namespace timetracker
         [[nodiscard]] const QString& getTaskDescription() const
         {
             return mTaskDesc;
+        }
+
+        [[nodiscard]] const QDate& m_creation_date() const
+        {
+            return mCreationDate;
         }
 
         [[nodiscard]] const QTime& getStartTime() const

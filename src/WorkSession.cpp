@@ -9,6 +9,8 @@ namespace timetracker
         , mProjectName{""}
         , mTaskName{""}
         , mUserName{""}
+        , mTaskDesc{""}
+        , mCreationDate{QDate::currentDate()}
         , mStartTime{QTime{}}
         , mEndTime{QTime{}}
         , mPauseStartTime{QTime{}}
