@@ -8,44 +8,42 @@ namespace timetracker
     {
     }
 
-    bool SessionManager::hasActiveSession() const
+    bool SessionManager::isValid(const std::string& funcName) const
     {
         if (mCurrentSession == nullptr)
         {
-            qWarning() << "[SessionManager] hasActiveSession()\n  | Current WorkSession* is nullptr";
+            qWarning() << "[SessionManager]" << funcName << "\n  | Current WorkSession* is nullptr";
             return false;
         }
+        return true;
+    }
+
+    bool SessionManager::hasActiveSession() const
+    {
+        if (!isValid("hasActiveSession()")) return false;
 
         return mCurrentSession->getStatus() == WorkSession::Status::Running;
     }
 
     const WorkSession* SessionManager::getCurrentSession() const
     {
-        if (mCurrentSession == nullptr)
-        {
-            qWarning() << "[SessionManager] getCurrentSession()\n  | Current WorkSession* is nullptr";
-            return nullptr;
-        }
+        if (!isValid("getCurrentSession()")) return nullptr;
         return mCurrentSession.get();
     }
 
     void SessionManager::addInactivityToCurrentSession(const qint64 seconds) const
     {
-        if (mCurrentSession == nullptr)
-        {
-            qWarning() << "[SessionManager] addInactivityToCurrentSession()\n  | Current WorkSession* is nullptr";
-            return;
-        }
+        if (!isValid("addInactivityToCurrentSession()")) return;
         mCurrentSession->addInactivity(seconds);
     }
 
-    void SessionManager::onStartSession(const QString& userName,
+    void SessionManager::startSession(const QString& userName,
                 const QString& projectName, const QString& taskName,
                 const QString& taskDescript)
     {
         // If a session is already running auto-stop and start new one
         // ToDo: Is there a better way to handle / will this abort session?
-        if (hasActiveSession()) onStopSession(false);
+        if (hasActiveSession()) stopSession(false);
 
         mCurrentSession = std::make_unique<WorkSession>();
         mCurrentSession->start(userName, projectName, taskName, taskDescript);
@@ -58,44 +56,47 @@ namespace timetracker
         }
         else
         {
-            qWarning() << "[SessionManager] onStartSession()\n  | Unable to start process for task:" << taskName;
+            qWarning() << "[SessionManager] startSession()\n  | Unable to start process for task:" << taskName;
         }
+    }
+
+    void SessionManager::stopSession(bool aborted)
+    {
+        if (!isValid("stopSession()")) return;
+
+        mCurrentSession->stop();
+        emit sessionStopped(*mCurrentSession);
+        emit sessionUpdated(*mCurrentSession); // stopping updates WorkSession
+    }
+
+    void SessionManager::pauseSession()
+    {
+        if (!isValid("pauseSession()")) return;
+
+        mCurrentSession->pause();
+        emit sessionPaused(*mCurrentSession);
+
+    }
+
+    void SessionManager::unpauseSession()
+    {
+        if (!isValid("unpauseSession()")) return;
+
+        mCurrentSession->unpause();
+
+        emit sessionResumed(*mCurrentSession);
+        emit sessionUpdated(*mCurrentSession);
     }
 
     void SessionManager::onUserIdle()
     {
-        if (mCurrentSession == nullptr)
-        {
-            qWarning() << "[SessionManager] onPauseSession()\n  | Current WorkSession* is nullptr";
-            return;
-        }
-
-        mCurrentSession->pause();
-        emit sessionPaused(*mCurrentSession);
+        if (!isValid("onUserIdle()")) return;
+        pauseSession();
     }
 
     void SessionManager::onUserNotIdle()
     {
-        if (mCurrentSession == nullptr)
-        {
-            qWarning() << "[SessionManager] onUnpauseSession()\n  | Current WorkSession* is nullptr";
-            return;
-        }
-
-        mCurrentSession->unpause();
-        emit sessionResumed(*mCurrentSession);
-        emit sessionUpdated(*mCurrentSession); // inactive time will have updated.
-    }
-
-    void SessionManager::onStopSession(bool aborted)
-    {
-        if (mCurrentSession == nullptr)
-        {
-            qWarning() << "[SessionManager] onStopSession()\n  | Current WorkSession* is nullptr";
-            return;
-        }
-        mCurrentSession->stop();
-        emit sessionStopped(*mCurrentSession);
-        emit sessionUpdated(*mCurrentSession); // stopping updates WorkSession
+        if (!isValid("onUserNotIdle()")) return;
+        unpauseSession();
     }
 }

@@ -10,7 +10,7 @@ namespace timetracker
         Q_OBJECT
 
     public:
-        AppController(class ActivityMonitor aMtr,
+        AppController(class ActivityMonitor* aMtr,
                       class ReminderScheduler* rSched,
                       class SessionManager* sMgr,
                       QObject* parent = nullptr);
@@ -30,22 +30,23 @@ namespace timetracker
          * @param taskDescript (optional) Any details the user wants to specify on the work.
          */
         void startSessionForTask(const QString& userName,
-                                 const QString& taskName, const QString& projectName,
-                                 const QString& taskDescript="");
+                                 const QString& projectName,
+                                 const QString& taskName,
+                                 const QString& taskDescript="") const;
 
-        void pauseCurrentSession(bool desiredPauseState);
-
+        void pauseCurrentSession() const;
+        void unpauseCurrentSession() const;
         void stopCurrentSession(bool aborted = false) const;
 
         /**
          * Used to confirm a user is still working.
          */
-        void userConfirmedStillWorking();
+        void userConfirmedStillWorking() const;
     signals:
         void reminderOneRequested();
         void reminderTwoRequested();
         void hardStopExecuted(const WorkSession& session);
-
+        void abortExecuted(const WorkSession& session);
     // handle different signals and how to manage them.
     private slots:
         /**
@@ -63,7 +64,7 @@ namespace timetracker
          * Emits `hardStopExecuted` signal.
          */
         void handleHardStop();
-
+        void handleAbort();
         /**
          * a handler for any needs on session start-up.
          * @param session Current WorkSession object.
@@ -77,9 +78,11 @@ namespace timetracker
 
 
     private:
-        class ActivityMonitor* activityMtr;
-        class ReminderScheduler* reminderSched;
-        class SessionManager* sessionMgr;
+        bool isValid() const;
+    private:
+        class ActivityMonitor* mActivityMtr;
+        class ReminderScheduler* mReminderSched;
+        class SessionManager* mSessionMgr;
 
     };
 } // timetracker

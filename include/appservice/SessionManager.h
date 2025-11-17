@@ -19,6 +19,21 @@ namespace timetracker
         [[nodiscard]] bool hasActiveSession() const;
 
         /**
+         * Starts a new Session that stores information like time, task & project details into a single object.
+         * @param userName user's name (from UserPref)
+         * @param taskName this task's name
+         * @param projectName this task's project name
+         * @param taskDescript (optional) Any details the user wants to specify on the work.
+         */
+        void startSession(const QString& userName,
+                            const QString& projectName, const QString& taskName,
+                            const QString& taskDescript="");
+
+        void stopSession(bool aborted = false);
+        void pauseSession();
+        void unpauseSession();
+
+        /**
          * @return The current WorkSession object being read/written to.
          */
         [[nodiscard]] const WorkSession* getCurrentSession() const;
@@ -32,9 +47,6 @@ namespace timetracker
         void sessionUpdated(const timetracker::WorkSession& session);
 
     public slots:
-        void onStartSession(const QString& userName,
-                const QString& projectName, const QString& taskName,
-                const QString& taskDescript="");
         /**
          * When a user goes idle this slot will handle how the
          * data collection occurring in WorkSession will respond.
@@ -45,8 +57,9 @@ namespace timetracker
          * WorkSession data object then resumes.
          */
         void onUserNotIdle();
-        void onStopSession(bool aborted = false);
 
+    private:
+        bool isValid(const std::string& funcName) const;
     private:
         std::unique_ptr<WorkSession> mCurrentSession;
     };
