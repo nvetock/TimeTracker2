@@ -12,7 +12,7 @@ namespace timetracker
     {
         if (mCurrentSession == nullptr)
         {
-            qWarning() << "[SessionManager] Current WorkSession* is nullptr";
+            qWarning() << "[SessionManager] hasActiveSession()\n  | Current WorkSession* is nullptr";
             return false;
         }
 
@@ -23,7 +23,7 @@ namespace timetracker
     {
         if (mCurrentSession == nullptr)
         {
-            qWarning() << "[SessionManager] Current WorkSession* is nullptr";
+            qWarning() << "[SessionManager] getCurrentSession()\n  | Current WorkSession* is nullptr";
             return nullptr;
         }
         return mCurrentSession.get();
@@ -33,7 +33,7 @@ namespace timetracker
     {
         if (mCurrentSession == nullptr)
         {
-            qWarning() << "[SessionManager] Current WorkSession* is nullptr";
+            qWarning() << "[SessionManager] addInactivityToCurrentSession()\n  | Current WorkSession* is nullptr";
             return;
         }
         mCurrentSession->addInactivity(seconds);
@@ -58,7 +58,7 @@ namespace timetracker
         }
         else
         {
-            qWarning() << "[SessionManager] Unable to start process for task:" << taskName;
+            qWarning() << "[SessionManager] onStartSession()\n  | Unable to start process for task:" << taskName;
         }
     }
 
@@ -66,7 +66,7 @@ namespace timetracker
     {
         if (mCurrentSession == nullptr)
         {
-            qWarning() << "[SessionManager] Current WorkSession* is nullptr";
+            qWarning() << "[SessionManager] onPauseSession()\n  | Current WorkSession* is nullptr";
             return;
         }
 
@@ -78,7 +78,7 @@ namespace timetracker
     {
         if (mCurrentSession == nullptr)
         {
-            qWarning() << "[SessionManager] Current WorkSession* is nullptr";
+            qWarning() << "[SessionManager] onUnpauseSession()\n  | Current WorkSession* is nullptr";
             return;
         }
 
@@ -91,7 +91,7 @@ namespace timetracker
     {
         if (mCurrentSession == nullptr)
         {
-            qWarning() << "[SessionManager] Current WorkSession* is nullptr";
+            qWarning() << "[SessionManager] onStopSession()\n  | Current WorkSession* is nullptr";
             return;
         }
         mCurrentSession->stop();

@@ -1,6 +1,7 @@
 #include <QCoreApplication>
 #include <QDebug>
 #include <iostream>
+#include <QTimer>
 #include <QThread>
 
 #include "domain/WorkSession.h"
@@ -13,13 +14,18 @@ int main(int argc, char* argv[])
     QCoreApplication app(argc, argv);
 
     // Inactivity tester
-    auto idleDetector = timetracker::createIdleDetector();
+    //auto idleDetector = timetracker::createIdleDetector();
 
-    constexpr int inactThreshSec{5};
-    constexpr int intrusiveSec{5};
-    constexpr int hardStopSec{10};
+    auto* sMgr = new timetracker::SessionManager();
 
 
+    QTimer::singleShot(0, [sMgr]()
+    {
+        qDebug() << "[main] Starting test...";
+
+        sMgr->onStartSession("namison", "proj", "t123", "A description here.");
+
+    });
 
     // QTimer::singleShot(0, [appController]()
     // {

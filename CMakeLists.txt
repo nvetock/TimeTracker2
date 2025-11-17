@@ -29,6 +29,7 @@ set(TIMETRACKER_SOURCES
         main.cpp
 
         # domain linking
+        src/WorkSession.cpp
 
         # infrastructure linking
 
@@ -37,6 +38,7 @@ set(TIMETRACKER_SOURCES
 
         # application service linking
         include/appservice/SessionManager.h
+        src/SessionManager.cpp
 
         # ui linking
 )
