@@ -4,9 +4,9 @@
 
 namespace timetracker
 {
-    ActivityMonitor::ActivityMonitor(IIdleDetector* idleDetector,
+    ActivityMonitor::ActivityMonitor(std::unique_ptr<IIdleDetector> idleDetector,
         int idleThresh, int pollInterval, QObject* parent)
-            : mIdleDetector{idleDetector}
+            : mIdleDetector{std::move(idleDetector)}
             , mIdleThresholdSec{idleThresh}
             , mPollIntervalMs{pollInterval}
             , mIsIdle{false}
@@ -22,12 +22,15 @@ namespace timetracker
             qCritical() << "[ActivityMonitor] startMonitoring()\n"
                      << "  | IdleDetector is nullptr.";
         }
+
+        qDebug() << "[ActivityMonitor] startMonitoring()\n  | Activated.";
         mIsIdle = false;
         mIdleTimer.start(mPollIntervalMs);
     }
 
     void ActivityMonitor::stopMonitoring()
     {
+        qDebug() << "[ActivityMonitor] stopMonitoring()\n  | Deactivated.";
         mIdleTimer.stop();
         mIsIdle = false;
     }

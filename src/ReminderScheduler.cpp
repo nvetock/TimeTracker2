@@ -22,7 +22,7 @@ namespace timetracker
 
     void ReminderScheduler::onSessionStarted()
     {
-        qDebug() << "[ReminderScheduler] onSessionStarted()";
+        qDebug() << "[ReminderScheduler] onSessionStarted()\n  | Activated.";
 
         mSessionActive = true;
         mUserIdle = true;
@@ -33,7 +33,7 @@ namespace timetracker
     void ReminderScheduler::onSessionStopped()
     {
         if (!mSessionActive) return;
-        qDebug() << "[ReminderScheduler] onSessionStopped()";
+        qDebug() << "[ReminderScheduler] onSessionStopped()\n  | Deactivated.";
 
         mSessionActive = false;
         mUserIdle = false;

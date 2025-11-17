@@ -25,7 +25,7 @@ namespace timetracker
          * @param pollInterval (milliseconds) Interval of polling for inactivity.
          * @param parent parent of this QObject
          */
-        ActivityMonitor(IIdleDetector* idleDetector,
+        ActivityMonitor(std::unique_ptr<IIdleDetector> idleDetector,
                         int idleThresh,
                         int pollInterval,
                         QObject* parent = nullptr);
