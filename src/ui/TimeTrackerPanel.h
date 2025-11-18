@@ -28,6 +28,7 @@ namespace ui
         void mousePressEvent(QMouseEvent* event) override;
 
     private:
+        void buildUi();
         void updateTargetGeometries();
 
         bool mOpen;
@@ -35,9 +36,19 @@ namespace ui
         QRect mClosedGeometry;
         QPropertyAnimation* mAnimation;
 
-        QVBoxLayout* mLayout;
-        QLabel* mTitle;
+        QHBoxLayout* mRootLayout;
+        QVBoxLayout* mCardLayout;
+
+        class SideTab* mSideTab;
+        QFrame* mMainCard;
+
+        QLabel* mStatusLabel;
+        QLabel* mTimerLabel;
+        QLabel* mDateLabel;
+        QLabel* mTaskLabel;
+        QLabel* mProjectLabel;
         QPushButton* mStartBtn;
+        QPushButton* mReturnBtn;
 
     };
 } // ui

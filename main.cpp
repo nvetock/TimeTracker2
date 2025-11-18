@@ -4,7 +4,7 @@
 #include <QTimer>
 #include <QThread>
 
-#include "ui/TimeTrackerPanel.h"
+#include "src/ui/TimeTrackerPanel.h"
 #include "domain/WorkSession.h"
 #include "idle/IdleDetectorFactory.h"
 #include "appservice/ActivityMonitor.h"
