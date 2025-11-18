@@ -13,6 +13,7 @@ namespace timetracker
         , mReminderTwoThresholdSec{reminderTwoThreshold}
         , mHardStopThresholdSec{hardStopThreshold}
         , mNextReminderToShow{reminder::ReminderOne}
+        , mUserResponseSinceIdle{false}
     {
         mTimer.setSingleShot(true);
 
@@ -22,10 +23,10 @@ namespace timetracker
 
     void ReminderScheduler::onSessionStarted()
     {
-        qDebug() << "[ReminderScheduler] onSessionStarted()\n  | Activated.";
+        qDebug() << "[ReminderScheduler] onSessionStarted()\n  | Activated. Called by" << sender();
 
         mSessionActive = true;
-        mUserIdle = true;
+        mUserIdle = false;
         resetReminderState();
         cancelTimer();
     }
@@ -46,19 +47,22 @@ namespace timetracker
         if (!mSessionActive) return;
         if (mUserIdle) return; // in case of repeated signals
 
-        qDebug() << "[ReminderScheduler] onSessionStarted()\n"
+        qDebug() << "[ReminderScheduler] onUserIdle()\n"
                  << "  | Displaying initial idle reminder.";
 
         mUserIdle = true;
+
+        // Ensure curr reminder state & timer are reset.
         resetReminderState();
+        cancelTimer();
 
         handleTimeout();
     }
 
     void ReminderScheduler::onUserNotIdle()
     {
-        qDebug() << "[ReminderScheduler] onSessionStarted()\n"
-                 << "  | ";
+        qDebug() << "[ReminderScheduler] onUserNotIdle()\n"
+                 << "  | Resetting reminder state.";
 
         mUserIdle = false;
         resetReminderState();
@@ -67,53 +71,56 @@ namespace timetracker
 
     void ReminderScheduler::handleTimeout()
     {
-        qDebug() << "[ReminderScheduler] handleTimeout()\n"
-                 << "  | Handling timeout stage:" << mNextReminderToShow;
-        switch (mNextReminderToShow)
+        if (mUserIdle)
         {
-        case reminder::ReminderOne:
-            reminderOne();
-            break;
-        case reminder::ReminderTwo:
-            reminderTwo();
-            break;
-        case reminder::HardStop:
-            hardStop();
-            break;
-        default:
-            qWarning() << "[ReminderScheduler] handleTimeout()\n  | executed in default space. rState:" << mNextReminderToShow;
-            break;
+            qDebug() << "[ReminderScheduler] handleTimeout()\n"
+                     << "  | Handling timeout stage:" << mNextReminderToShow;
+            switch (mNextReminderToShow)
+            {
+            case reminder::rState::ReminderOne:
+                reminderOne();
+                break;
+            case reminder::rState::ReminderTwo:
+                reminderTwo();
+                break;
+            case reminder::rState::HardStop:
+                hardStop();
+                break;
+            default:
+                qWarning() << "[ReminderScheduler] handleTimeout()\n  | executed in default space. rState:" << mNextReminderToShow;
+                break;
+            }
+
+            // Increment and send back to enum
+            quint8 reminderIdx = mNextReminderToShow;
+            ++reminderIdx;
+            reminderIdx = reminderIdx % static_cast<quint8>(reminder::rState::RSTATE_COUNT);
+
+            mNextReminderToShow = static_cast<reminder::rState>(reminderIdx);
         }
-
-        // Increment and send back to enum
-        quint8 reminderIdx = mNextReminderToShow;
-        ++reminderIdx;
-        reminderIdx = reminderIdx % reminder::rState::RSTATE_COUNT;
-
-        mNextReminderToShow = static_cast<reminder::rState>(reminderIdx);
     }
 
     void ReminderScheduler::reminderOne()
     {
-        qDebug() << "[ReminderScheduler] reminderOne()"
+        qDebug() << "[ReminderScheduler] reminderOne()\n"
                  << "  | User is now idle.";
 
-        mTimer.start(mReminderTwoThresholdSec);
+        mTimer.start(mReminderTwoThresholdSec * 1000);
         emit reminderOneShown();
     }
 
     void ReminderScheduler::reminderTwo()
     {
-        qDebug() << "[ReminderScheduler] reminderTwo()"
+        qDebug() << "[ReminderScheduler] reminderTwo()\n"
          << "  | Session will timeout soon";
 
-        mTimer.start(mHardStopThresholdSec);
+        mTimer.start(mHardStopThresholdSec * 1000);
         emit reminderTwoShown();
     }
 
     void ReminderScheduler::hardStop()
     {
-        qDebug() << "[ReminderScheduler] hardStop()"
+        qDebug() << "[ReminderScheduler] hardStop()\n"
          << "  | Ending session...";
 
         // reset and cancel everything.

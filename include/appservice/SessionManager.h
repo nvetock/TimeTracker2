@@ -59,7 +59,7 @@ namespace timetracker
         void onUserNotIdle();
 
     private:
-        bool isValid(const std::string& funcName) const;
+        [[nodiscard]] bool isValid(const std::string& funcName) const;
     private:
         std::unique_ptr<WorkSession> mCurrentSession;
     };

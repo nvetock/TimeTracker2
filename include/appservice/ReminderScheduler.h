@@ -7,7 +7,7 @@
 
 namespace reminder
 {
-    enum rState { ReminderOne, ReminderTwo, HardStop, RSTATE_COUNT };
+    enum rState : quint8 { ReminderOne, ReminderTwo, HardStop, RSTATE_COUNT };
 }
 
 namespace timetracker
