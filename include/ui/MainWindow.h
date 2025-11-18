@@ -26,8 +26,8 @@ namespace ui
                    QWidget* parent = nullptr);
 
     public slots:
-        void showFriendlyReminderDialog();
-        void showIntrusiveReminderDialog();
+        void showReminderOneDialog();
+        void showReminderTwoDialog();
 
         // react to session changes here
         void onSessionStarted(const timetracker::WorkSession& session);

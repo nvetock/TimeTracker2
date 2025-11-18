@@ -50,6 +50,8 @@ set(TIMETRACKER_SOURCES
         src/SessionManager.cpp
 
         # ui linking
+        include/ui/TimeTrackerPanel.h
+        src/TimeTrackerPanel.cpp
 )
 
 # ---- Executable / bundle settings ----

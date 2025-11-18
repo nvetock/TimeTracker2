@@ -55,7 +55,6 @@ namespace timetracker
     private:
         bool mSessionActive;
         bool mUserIdle;
-        bool mUserResponseSinceIdle;
 
         int mReminderTwoThresholdSec;
         int mHardStopThresholdSec;

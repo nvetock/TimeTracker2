@@ -1,9 +1,10 @@
-#include <QCoreApplication>
+#include <QApplication>
 #include <QDebug>
 #include <iostream>
 #include <QTimer>
 #include <QThread>
 
+#include "ui/TimeTrackerPanel.h"
 #include "domain/WorkSession.h"
 #include "idle/IdleDetectorFactory.h"
 #include "appservice/ActivityMonitor.h"
@@ -14,12 +15,15 @@
 
 int main(int argc, char* argv[])
 {
-    QCoreApplication app(argc, argv);
+    QApplication app(argc, argv);
 
     constexpr int inactiveThresh{10};
     constexpr int reminderPollIntervalMS{1000};
     constexpr int warningThresh{10};
     constexpr int hardStopThresh{5};
+
+    auto* panel = new ui::TimeTrackerPanel();
+    panel->show();
 
     // Inactivity tester
     auto idleDetector = timetracker::createIdleDetector();
@@ -65,6 +69,19 @@ int main(int argc, char* argv[])
     appController->startSessionForTask(
         "userNNName", "project123", "task2222", "description here..."
     );
+
+//Timer State
+    QObject::connect(sMgr, &timetracker::SessionManager::sessionStarted,
+        panel, [panel](const timetracker::WorkSession&)
+        {
+            panel->setOpen(false);
+        });
+
+    QObject::connect(sMgr, &timetracker::SessionManager::sessionStopped,
+        panel, [panel](const timetracker::WorkSession&)
+        {
+            panel->setOpen(true);
+        });
 
     // QTimer::singleShot(0, [sMgr]()
     // {

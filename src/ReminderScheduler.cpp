@@ -13,7 +13,6 @@ namespace timetracker
         , mReminderTwoThresholdSec{reminderTwoThreshold}
         , mHardStopThresholdSec{hardStopThreshold}
         , mNextReminderToShow{reminder::ReminderOne}
-        , mUserResponseSinceIdle{false}
     {
         mTimer.setSingleShot(true);
 
