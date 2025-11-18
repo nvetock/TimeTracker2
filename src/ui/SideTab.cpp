@@ -52,7 +52,7 @@ namespace ui
 
         // Build the font
         QFont font;
-        font.setFamily("Helvetica Neue");
+        font.setFamily("Barlow Semi Condensed");
         font.setBold(true);
         font.setPointSize(9);
         font.setLetterSpacing(QFont::AbsoluteSpacing, 2);

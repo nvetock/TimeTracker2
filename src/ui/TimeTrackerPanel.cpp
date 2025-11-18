@@ -81,7 +81,7 @@ namespace ui
         mMainCard->setObjectName("MainCard");
         mMainCard->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 
-        mCardLayout = new QVBoxLayout{this};
+        mCardLayout = new QVBoxLayout{mMainCard};
         mCardLayout->setContentsMargins(24, 20, 24, 20);
         mCardLayout->setSpacing(10);
         
@@ -148,7 +148,7 @@ namespace ui
 
             QLabel#StatusLabel {
                 color: #A0A4AA;
-                font-family: "Helvetica Neue", Arial, sans-serif;
+                font-family: "Barlow Semi Condensed", Arial, sans-serif;
                 font-size: 10px;
                 letter-spacing: 2px;
             }
@@ -162,28 +162,29 @@ namespace ui
 
             QLabel#DateLabel {
                 color: #A0A4AA;
-                font-family: "Helvetica Neue", Arial, sans-serif;
+                font-family: "Barlow Semi Condensed", Arial, sans-serif;
                 font-size: 10px;
                 margin-top: 4px;
             }
 
-            QLabel#TaskTitleLabel {
+            QLabel#ProjectLabel {
                 color: #B4FF6B; /* lime accent */
-                font-family: "Helvetica Neue", Arial, sans-serif;
+                font-family: "Barlow", Arial, sans-serif;
                 font-size: 11px;
                 font-weight: 700;
             }
 
-            QLabel#DescriptionLabel {
+            QLabel#TaskLabel {
                 color: #D0D3D7;
-                font-family: "Helvetica Neue", Arial, sans-serif;
+                font-family: "Barlow Semi Condensed", Arial, sans-serif;
+                font-weight: 600;
                 font-size: 10px;
             }
 
             QPushButton#StartButton {
                 background-color: #B4FF6B;
                 color: #111111;
-                font-family: "Helvetica Neue", Arial, sans-serif;
+                font-family: "Barlow Semi Condensed", Arial, sans-serif;
                 font-size: 14px;
                 font-weight: 700;
                 border-radius: 8px;
@@ -200,7 +201,7 @@ namespace ui
 
             QLabel#BackLabel {
                 color: #A0A4AA;
-                font-family: "Helvetica Neue", Arial, sans-serif;
+                font-family: "Barlow Semi Condensed", Arial, sans-serif;
                 font-size: 10px;
             }
         )");

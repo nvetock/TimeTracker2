@@ -3,6 +3,7 @@
 #include <iostream>
 #include <QTimer>
 #include <QThread>
+#include <QFontDatabase>
 
 #include "src/ui/TimeTrackerPanel.h"
 #include "domain/WorkSession.h"
@@ -16,6 +17,12 @@
 int main(int argc, char* argv[])
 {
     QApplication app(argc, argv);
+
+// FONTS
+    QFontDatabase::addApplicationFont(":fonts/BarlowCondensed-SemiBold.ttf");
+    QFontDatabase::addApplicationFont(":fonts/BarlowSemiCondensed-Bold.ttf");
+    QFontDatabase::addApplicationFont(":fonts/Barlow-Medium.ttf");
+    QFontDatabase::addApplicationFont(":fonts/Barlow-SemiBold.ttf");
 
     constexpr int inactiveThresh{10};
     constexpr int reminderPollIntervalMS{1000};
