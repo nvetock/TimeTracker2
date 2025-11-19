@@ -63,7 +63,7 @@ namespace ui
         p.fillPath(path, fill);
 
         // Border
-        p.setPen(QColor("#262626"));
+        p.setPen(fill);
         p.drawPath(path);
 
         // Draw verrttical text

@@ -79,7 +79,7 @@ namespace ui
         mRootLayout->addWidget(mSideTab, 0, Qt::AlignTop);
 
         // --- Main card
-        mMainCard = new QFrame{this};
+        mMainCard = new GradientFrame{this};
         mMainCard->setObjectName("MainCard");
         // Set the main panel size
         mMainCard->setFixedSize(360, 550);

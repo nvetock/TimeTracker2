@@ -7,6 +7,8 @@
 #include <QVBoxLayout>
 #include <QGraphicsDropShadowEffect>
 
+#include "GradientFrame.h"
+
 namespace ui
 {
     class TimeTrackerPanel : public QWidget
@@ -41,7 +43,7 @@ namespace ui
         QVBoxLayout* mCardLayout;
 
         class SideTab* mSideTab;
-        QFrame* mMainCard;
+        GradientFrame* mMainCard;
         QGraphicsDropShadowEffect* mShadow;
 
         QLabel* mStatusLabel;

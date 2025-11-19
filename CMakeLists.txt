@@ -54,6 +54,7 @@ set(TIMETRACKER_SOURCES
         src/ui/TimeTrackerPanel.cpp
         src/ui/SideTab.h
         src/ui/SideTab.cpp
+        src/ui/GradientFrame.h
 )
 
 
