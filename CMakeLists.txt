@@ -56,19 +56,23 @@ set(TIMETRACKER_SOURCES
         src/ui/SideTab.cpp
 )
 
+
 # ---- Executable / bundle settings ----
-add_executable(TimeTracker
+add_executable(${PROJECT_NAME}
         ${TIMETRACKER_SOURCES}
 )
+# ---- Add qt font resources path
+qt_add_resources(APP_RESOURCES resources.qrc)
+target_sources(${PROJECT_NAME} PRIVATE main.cpp ${APP_RESOURCES})
 
 # On Windows, WIN32_EXECUTABLE hides the console window.
 # On macOS, MACOSX_BUNDLE builds a .app bundle.
 if (WIN32)
-    set_target_properties(TimeTracker PROPERTIES
+    set_target_properties(${PROJECT_NAME} PROPERTIES
             WIN32_EXECUTABLE FALSE
     )
 elseif(APPLE)
-    set_target_properties(TimeTracker PROPERTIES
+    set_target_properties(${PROJECT_NAME} PROPERTIES
             MACOSX_BUNDLE TRUE
             MACOSX_BUNDLE_GUI_IDENTIFIER "com.example.timetracker"
             MACOSX_BUNDLE_BUNDLE_NAME "TimeTracker"
@@ -76,7 +80,7 @@ elseif(APPLE)
 endif()
 
 # ---- Link Qt ----
-target_link_libraries(TimeTracker
+target_link_libraries(${PROJECT_NAME}
         PRIVATE
         Qt6::Core
         Qt6::Gui
@@ -84,7 +88,7 @@ target_link_libraries(TimeTracker
 )
 
 # ---- Include dirs (optional if you keep everything in src/) ----
-target_include_directories(TimeTracker
+target_include_directories(${PROJECT_NAME}
         PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/include
         # ${CMAKE_CURRENT_SOURCE_DIR}/src
@@ -113,22 +117,22 @@ if (WIN32 AND NOT DEFINED CMAKE_TOOLCHAIN_FILE)
 
     # Copy platform plugin (qwindows)
     if (EXISTS "${QT_INSTALL_PATH}/plugins/platforms/qwindows${DEBUG_SUFFIX}.dll")
-        add_custom_command(TARGET TimeTracker POST_BUILD
+        add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
                 COMMAND ${CMAKE_COMMAND} -E make_directory
-                "$<TARGET_FILE_DIR:TimeTracker>/plugins/platforms/"
+                "$<TARGET_FILE_DIR:${PROJECT_NAME}>/plugins/platforms/"
                 COMMAND ${CMAKE_COMMAND} -E copy
                 "${QT_INSTALL_PATH}/plugins/platforms/qwindows${DEBUG_SUFFIX}.dll"
-                "$<TARGET_FILE_DIR:TimeTracker>/plugins/platforms/"
+                "$<TARGET_FILE_DIR:${PROJECT_NAME}>/plugins/platforms/"
         )
     endif ()
 
     # Copy core Qt DLLs this app depends on
     foreach(QT_LIB Core Gui Widgets)
         if (EXISTS "${QT_INSTALL_PATH}/bin/Qt6${QT_LIB}${DEBUG_SUFFIX}.dll")
-            add_custom_command(TARGET TimeTracker POST_BUILD
+            add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
                     COMMAND ${CMAKE_COMMAND} -E copy
                     "${QT_INSTALL_PATH}/bin/Qt6${QT_LIB}${DEBUG_SUFFIX}.dll"
-                    "$<TARGET_FILE_DIR:TimeTracker>/"
+                    "$<TARGET_FILE_DIR:${PROJECT_NAME}>/"
             )
         endif ()
     endforeach()

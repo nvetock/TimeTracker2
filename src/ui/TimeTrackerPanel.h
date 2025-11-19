@@ -5,6 +5,7 @@
 #include <QLabel>
 #include <QPushButton>
 #include <QVBoxLayout>
+#include <QGraphicsDropShadowEffect>
 
 namespace ui
 {
@@ -41,6 +42,7 @@ namespace ui
 
         class SideTab* mSideTab;
         QFrame* mMainCard;
+        QGraphicsDropShadowEffect* mShadow;
 
         QLabel* mStatusLabel;
         QLabel* mTimerLabel;

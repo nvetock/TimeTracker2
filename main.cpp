@@ -19,10 +19,19 @@ int main(int argc, char* argv[])
     QApplication app(argc, argv);
 
 // FONTS
-    QFontDatabase::addApplicationFont(":fonts/BarlowCondensed-SemiBold.ttf");
-    QFontDatabase::addApplicationFont(":fonts/BarlowSemiCondensed-Bold.ttf");
-    QFontDatabase::addApplicationFont(":fonts/Barlow-Medium.ttf");
-    QFontDatabase::addApplicationFont(":fonts/Barlow-SemiBold.ttf");
+    int f1 = QFontDatabase::addApplicationFont(":/fonts/resources/fonts/BarlowCondensed-SemiBold.ttf");
+    int f2 = QFontDatabase::addApplicationFont(":/fonts/resources/fonts/BarlowSemiCondensed-Bold.ttf");
+    int f3 = QFontDatabase::addApplicationFont(":/fonts/resources/fonts/Barlow-Medium.ttf");
+    int f4 = QFontDatabase::addApplicationFont(":/fonts/resources/fonts/Barlow-SemiBold.ttf");
+
+    if (f1 == -1 || f2 == -1 || f3 == -1 || f4 == -1)
+    {
+        qWarning() << "[main] Font not found.\n"
+                   << "  | f1:" << f1
+                   << "\n   | f2:" << f2
+                   << "\n   | f3:" << f3
+                   << "\n   | f4:" << f4;
+    }
 
     constexpr int inactiveThresh{10};
     constexpr int reminderPollIntervalMS{1000};

@@ -13,6 +13,11 @@ namespace ui
 
     protected:
         void paintEvent(QPaintEvent* event) override;
+        void enterEvent(QEnterEvent* event) override;
+        void leaveEvent(QEvent* event) override;
         QSize sizeHint() const override;
+
+    private:
+        bool mHover;
     };
 }
