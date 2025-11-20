@@ -4,6 +4,7 @@
 #include <QTimer>
 #include <QThread>
 #include <QFontDatabase>
+#include <QFile>
 
 #include "src/ui/TimeTrackerPanel.h"
 #include "domain/WorkSession.h"
@@ -23,6 +24,12 @@ int main(int argc, char* argv[])
     int f2 = QFontDatabase::addApplicationFont(":/fonts/resources/fonts/BarlowSemiCondensed-Bold.ttf");
     int f3 = QFontDatabase::addApplicationFont(":/fonts/resources/fonts/Barlow-Medium.ttf");
     int f4 = QFontDatabase::addApplicationFont(":/fonts/resources/fonts/Barlow-SemiBold.ttf");
+
+    if (QFile qssFile(":/styles/app.qss"); qssFile.open(QFile::ReadOnly | QFile::Text))
+    {
+        const QString style = QString::fromUtf8(qssFile.readAll());
+        app.setStyleSheet(style);
+    }
 
     if (f1 == -1 || f2 == -1 || f3 == -1 || f4 == -1)
     {

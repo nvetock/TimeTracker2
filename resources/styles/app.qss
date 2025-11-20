@@ -76,3 +76,36 @@ QPushButton#ReturnBtn {
 QPushButton#ReturnBtn:hover {
     color: #00F5C6;
 }
+
+QLabel#PageTitleLabel {
+    color: #FFFFFF;
+    font-family: "Barlow Semi Condensed";
+    font-size: 14px;
+    letter-spacing: 2px;
+}
+
+QLabel#StatusLabel {
+    color: #FFFFFF;
+    font-family: "Barlow Semi Condensed";
+    font-size: 16px;
+    letter-spacing: 2px;
+}
+
+QFrame#HeaderRule {
+    background-color: #00E099;
+    max-height: 1px;
+}
+
+QPushButton#HeaderBackChevron {
+    background-color: transparent;
+    border: none;
+    color: #00E099;
+    font-family: "Barlow Semi Condensed";
+    font-size: 14px;
+    font-weight: 700;
+    padding: 0;
+}
+
+QPushButton#HeaderBackChevron:hover {
+    color: #00F5C6;
+}

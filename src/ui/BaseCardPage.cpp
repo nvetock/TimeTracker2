@@ -73,7 +73,7 @@ namespace ui
         mTopHeaderRow->setSpacing(0);
 
         mBackChevron = new QPushButton(QStringLiteral("<<"), mMainCard);
-        mBackChevron->setObjectName("mBackChevron");
+        mBackChevron->setObjectName("HeaderBackChevron");
         mBackChevron->setFlat(true);
         mBackChevron->setCursor(Qt::PointingHandCursor);
         mBackChevron->setFixedSize(24,24);

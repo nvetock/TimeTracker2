@@ -15,11 +15,23 @@ The other solution was manual time-entry and who has time for that?
 ### Current Roadmap
 - A logger class to support the beginning of this built
 - Functioning data objects built
-- A system that tracks time accurately
-- A way to display time tracking to console.
-- A way to interact with: start, pause, stop. the timer from console
-- Idle tracking state that will auto-pause any further progress on timer.
-
+- A system that tracks time accurately (complete)
+- A way to display time tracking to console. (complete)
+- A way to interact with: start, pause, stop. the timer from console (complete-ish, moving manual intervention to button UI)
+- Idle tracking state that will auto-pause any further progress on timer. (complete)
+- A UI that supports multiple pages with similar styling
+- Defined StyleSheet classes that can be used universally
+- Set Color Theme (complete-ish for now)
+- UI Connected to backend timing and other program features.
+- Data persistence.
+### Pages Coming
+- HomePage
+- Log History
+- Export Page
+- TrackWorkTimerPage.cpp
+- TrackWorkSetupPage.cpp
+- LogHistoryPage.cpp
+- SettingsPage.cpp
 ## Architecture
 ### Domain
 - WorkSession
