@@ -17,7 +17,7 @@ namespace ui
 
     public:
         explicit TimeTrackerPanel(QWidget* parent = nullptr);
-        ~TimeTrackerPanel();
+        ~TimeTrackerPanel() = default;
 
         // Open / Close
         void setOpen(bool open);

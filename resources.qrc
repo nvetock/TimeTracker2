@@ -5,4 +5,7 @@
         <file>resources/fonts/Barlow-SemiBold.ttf</file>
         <file>resources/fonts/Barlow-Medium.ttf</file>
     </qresource>
+    <qresource prefix="/styles">
+        <file>resources/styles/app.qss</file>
+    </qresource>
 </RCC>

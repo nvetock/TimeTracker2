@@ -38,7 +38,10 @@ namespace data
         if (mSaveDir.isEmpty())
         {
             const QString docs = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
-            mSaveDir = QDir(docs).filePath("TimeTracker");
+
+            const QDir dir(docs);
+            const QString defaultDir = dir.filePath("TimeTracker");
+            mSaveDir = defaultDir;
         }
     }
 

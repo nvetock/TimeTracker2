@@ -1,0 +1,78 @@
+QFrame#MainCard {
+    background-color: #262626;
+    background-image: linear-gradient(#262626, #ffffff);
+    border-bottom-left-radius: 16px;
+}
+
+QLabel#StatusLabel {
+    color: #A0A4AA;
+    font-family: "Barlow Semi Condensed", Arial, sans-serif;
+    font-size: 16px;
+    letter-spacing: 2px;
+    margin: 0;
+}
+
+QLabel#TimerLabel {
+    color: #FFFFFF;
+    font-family: "Barlow Condensed", "Consolas", monospace;
+    font-size: 72px;
+    font-weight: 600;
+    margin: 0;
+}
+
+QLabel#DateLabel {
+    color: #FFFFFF;
+    font-family: "Barlow Semi Condensed", Arial, sans-serif;
+    letter-spacing: 2px;
+    font-size: 18px;
+    margin-top: 4px;
+}
+
+QLabel#ProjectLabel {
+    color: #00E099;
+    font-family: "Barlow Semi Condensed", Arial, sans-serif;
+    font-size: 22px;
+    letter-spacing: 1px;
+    font-weight: 700;
+}
+
+QLabel#TaskLabel {
+    color: #D0D3D7;
+    font-family: "Barlow", Arial, sans-serif;
+    font-weight: 600;
+    letter-spacing: 1px;
+    font-size: 18px;
+}
+
+QPushButton#StartBtn {
+    background-color: #00E099;
+    color: #262626;
+    font-family: "Barlow Semi Condensed", Arial, sans-serif;
+    font-size: 40px;
+    padding-bottom: 4px;
+    font-weight: 700;
+    border-radius: 8px;
+    border: none;
+}
+
+QPushButton#StartBtn:hover {
+    background-color: #00F5C6;
+}
+
+QPushButton#StartBtn:pressed {
+    background-color: #00C385;
+}
+
+QPushButton#ReturnBtn {
+    background-color: transparent;
+    background: transparent;
+    border: none;
+    color: #00E099;
+    font-size: 24px;
+    font-family: "Barlow Semi Condensed", Arial, sans-serif;
+    font-weight: 700;
+}
+
+QPushButton#ReturnBtn:hover {
+    color: #00F5C6;
+}

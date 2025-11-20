@@ -17,18 +17,6 @@ namespace ui
           , mOpen{false}
           , mOpenGeometry{QRect{}}
           , mClosedGeometry{QRect{}}
-          , mAnimation{nullptr}
-          , mRootLayout{nullptr}
-          , mCardLayout{nullptr}
-          , mSideTab{nullptr}
-          , mMainCard{nullptr}
-          , mStatusLabel{nullptr}
-          , mTimerLabel{nullptr}
-          , mDateLabel{nullptr}
-          , mTaskLabel{nullptr}
-          , mProjectLabel{nullptr}
-          , mStartBtn{nullptr}
-          , mReturnBtn{nullptr}
     {
         // Window flags: frameless + tool + stays on top
         setWindowFlags(Qt::FramelessWindowHint
@@ -50,83 +38,36 @@ namespace ui
         mOpen = true;
     }
 
-    TimeTrackerPanel::~TimeTrackerPanel()
-    {
-        delete mAnimation;
-        delete mRootLayout;
-        delete mCardLayout;
-        delete mSideTab;
-        delete mMainCard;
-        delete mStatusLabel;
-        delete mTimerLabel;
-        delete mDateLabel;
-        delete mTaskLabel;
-        delete mProjectLabel;
-        delete mStartBtn;
-        delete mReturnBtn;
-    }
-
     void TimeTrackerPanel::buildUi()
     {
-        mRootLayout = new QHBoxLayout{this};
-        mRootLayout->setContentsMargins(0, 0, 0, 0);
-        mRootLayout->setSpacing(0);
-
-        // --- Side tab
-        mSideTab = new SideTab{this};
-        mSideTab->setObjectName("SideTab");
-        mSideTab->setFixedSize(32, 152);
-        mRootLayout->addWidget(mSideTab, 0, Qt::AlignTop);
-
-        // --- Main card
-        mMainCard = new GradientFrame{this};
-        mMainCard->setObjectName("MainCard");
-        // Set the main panel size
-        mMainCard->setFixedSize(360, 550);
-
-        mCardLayout = new QVBoxLayout{mMainCard};
-        mCardLayout->setContentsMargins(24, 20, 24, 20);
-        mCardLayout->setSpacing(0);
-
-        mShadow = new QGraphicsDropShadowEffect(mMainCard);
-        mShadow->setBlurRadius(48);
-        mShadow->setOffset(0, -12);
-        mShadow->setColor(QColor(0, 0, 0, 100));
-        mMainCard->setGraphicsEffect(mShadow);
-
-        // Status
-        mStatusLabel = new QLabel("NOT STARTED", mMainCard);
-        mStatusLabel->setObjectName("StatusLabel");
-        mStatusLabel->setAlignment(Qt::AlignCenter);
-
         // Timer
-        mTimerLabel = new QLabel("00:00:00", mMainCard);
-        mTimerLabel->setObjectName("TimerLabel");
-        mTimerLabel->setAlignment(Qt::AlignCenter);
+        auto* timerLabel = new QLabel("00:00:00", mainCard);
+        timerLabel->setObjectName("TimerLabel");
+        timerLabel->setAlignment(Qt::AlignCenter);
 
         // Date
-        mDateLabel = new QLabel("11/18/2025", mMainCard);
-        mDateLabel->setObjectName("DateLabel");
-        mDateLabel->setAlignment(Qt::AlignCenter);
+        auto* dateLabel = new QLabel("11/18/2025", mainCard);
+        dateLabel->setObjectName("DateLabel");
+        dateLabel->setAlignment(Qt::AlignCenter);
 
         // Project Title
-        mProjectLabel = new QLabel("AI SKILLS FUNDAMENTALS\nCERTIFICATE", mMainCard);
-        mProjectLabel->setObjectName("ProjectLabel");
-        mProjectLabel->setAlignment(Qt::AlignCenter);
-        mProjectLabel->setWordWrap(true);
+        auto* projectLabel = new QLabel("AI SKILLS FUNDAMENTALS\nCERTIFICATE", mainCard);
+        projectLabel->setObjectName("ProjectLabel");
+        projectLabel->setAlignment(Qt::AlignCenter);
+        projectLabel->setWordWrap(true);
 
         // Group Date + Project
         auto* dpGroup = new QVBoxLayout();
         dpGroup->setSpacing(2);
         dpGroup->setContentsMargins(0, 0, 0, 0);
-        dpGroup->addWidget(mDateLabel);
-        dpGroup->addWidget(mProjectLabel);
+        dpGroup->addWidget(dateLabel);
+        dpGroup->addWidget(projectLabel);
 
         // Group: Timer + dpGroup
         auto* tdpGroup = new QVBoxLayout();
         tdpGroup->setSpacing(0);
         tdpGroup->setContentsMargins(0, 0, 0, 0);
-        tdpGroup->addWidget(mTimerLabel);
+        tdpGroup->addWidget(timerLabel);
         tdpGroup->addLayout(dpGroup);
 
         // Task Title
@@ -134,7 +75,7 @@ namespace ui
             "Long task name appears like\n"
             "this on the device UI screen\n"
             "when it goes to three lines.",
-            mMainCard
+            mainCard
         );
         mTaskLabel->setObjectName("TaskLabel");
         mTaskLabel->setAlignment(Qt::AlignCenter);
@@ -147,12 +88,13 @@ namespace ui
         tdptGroup->addLayout(tdpGroup);
         tdptGroup->addWidget(mTaskLabel);
 
-        // Group: Status + tdpGroup
-        auto* stdptGroup = new QVBoxLayout();
-        stdptGroup->setSpacing(20);
-        stdptGroup->setContentsMargins(0, 0, 0, 0);
-        stdptGroup->addWidget(mStatusLabel);
-        stdptGroup->addLayout(tdptGroup);
+        // OLD STATUS ADDITION
+        // // Group: Status + tdpGroup
+        // auto* stdptGroup = new QVBoxLayout();
+        // stdptGroup->setSpacing(20);
+        // stdptGroup->setContentsMargins(0, 0, 0, 0);
+        // stdptGroup->addWidget(mTitleLabel);
+        // stdptGroup->addLayout(tdptGroup);
 
         // Start Button
         mStartBtn = new QPushButton("START", mMainCard);
@@ -184,18 +126,18 @@ namespace ui
             label->setMargin(0);
         };
 
-        fixedText(mStatusLabel);
-        fixedText(mTimerLabel);
-        fixedText(mDateLabel);
-        fixedText(mProjectLabel);
+        fixedText(mTitleLabel);
+        fixedText(timerLabel);
+        fixedText(dateLabel);
+        fixedText(projectLabel);
         fixedText(mTaskLabel);
 
         // Layout Order
-        //mCardLayout->addWidget(mStatusLabel);
+        //mCardLayout->addWidget(mTitleLabel);
         //mCardLayout->addSpacing(2);
-        //mCardLayout->addWidget(mTimerLabel);
+        //mCardLayout->addWidget(timerLabel);
         //mCardLayout->addLayout(dpGroup);
-        //mCardLayout->addWidget(mProjectLabel);
+        //mCardLayout->addWidget(projectLabel);
        // mCardLayout->addSpacing(8);
         //mCardLayout->addWidget(mTaskLabel);
         //mCardLayout->addSpacing(8);
@@ -205,87 +147,11 @@ namespace ui
 
         mRootLayout->addWidget(mMainCard);
 
+
         //region Stylesheet
 
         setStyleSheet(R"(
-            QFrame#MainCard {
-                background-color: #262626;
-                background-image: linear-gradient(#262626, #ffffff);
-                border-bottom-left-radius: 16px;
-            }
 
-            QLabel#StatusLabel {
-                color: #A0A4AA;
-                font-family: "Barlow Semi Condensed", Arial, sans-serif;
-                font-size: 16px;
-                letter-spacing: 2px;
-                margin: 0;
-            }
-
-            QLabel#TimerLabel {
-                color: #FFFFFF;
-                font-family: "Barlow Condensed", "Consolas", monospace;
-                font-size: 72px;
-                font-weight: 600;
-                margin: 0;
-            }
-
-            QLabel#DateLabel {
-                color: #FFFFFF;
-                font-family: "Barlow Semi Condensed", Arial, sans-serif;
-                letter-spacing: 2px;
-                font-size: 18px;
-                margin-top: 4px;
-            }
-
-            QLabel#ProjectLabel {
-                color: #00E099;
-                font-family: "Barlow Semi Condensed", Arial, sans-serif;
-                font-size: 22px;
-                letter-spacing: 1px;
-                font-weight: 700;
-            }
-
-            QLabel#TaskLabel {
-                color: #D0D3D7;
-                font-family: "Barlow", Arial, sans-serif;
-                font-weight: 600;
-                letter-spacing: 1px;
-                font-size: 18px;
-            }
-
-            QPushButton#StartBtn {
-                background-color: #00E099;
-                color: #262626;
-                font-family: "Barlow Semi Condensed", Arial, sans-serif;
-                font-size: 40px;
-                padding-bottom: 4px;
-                font-weight: 700;
-                border-radius: 8px;
-                border: none;
-            }
-
-            QPushButton#StartBtn:hover {
-                background-color: #00F5C6;
-            }
-
-            QPushButton#StartBtn:pressed {
-                background-color: #00C385;
-            }
-
-            QPushButton#ReturnBtn {
-                background-color: transparent;
-                background: transparent;
-                border: none;
-                color: #00E099;
-                font-size: 24px;
-                font-family: "Barlow Semi Condensed", Arial, sans-serif;
-                font-weight: 700;
-            }
-
-            QPushButton#ReturnBtn:hover {
-                color: #00F5C6;
-            }
         )");
         //endregion
     }
