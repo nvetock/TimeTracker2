@@ -49,6 +49,8 @@ QPushButton#StartBtn {
     color: #262626;
     font-family: "Barlow Semi Condensed", Arial, sans-serif;
     font-size: 40px;
+    padding-right: 16px;
+    padding-left: 16px;
     padding-bottom: 4px;
     font-weight: 700;
     border-radius: 8px;

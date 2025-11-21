@@ -84,7 +84,7 @@ namespace ui
 
     mTitleLabel = new QLabel("UNTITLED", mMainCard);
     mTitleLabel->setObjectName("PageTitleLabel");
-    mTitleLabel->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+    mTitleLabel->setAlignment(Qt::AlignCenter);
 
     mHeaderRule = new QFrame(mMainCard);
     mHeaderRule->setObjectName("HeaderRule");
@@ -95,8 +95,8 @@ namespace ui
     mBackChevron->setVisible(false);
 
     mTopHeaderRow->addWidget(mBackChevron, 0, Qt::AlignLeft | Qt::AlignVCenter);
-    mTopHeaderRow->addWidget(mTitleLabel, 0, Qt::AlignLeft | Qt::AlignVCenter);
-    mTopHeaderRow->addStretch();
+    mTopHeaderRow->addWidget(mTitleLabel);
+    //mTopHeaderRow->addStretch();
 
     mHeaderLayout->addLayout(mTopHeaderRow);
     mHeaderLayout->addSpacing(4);

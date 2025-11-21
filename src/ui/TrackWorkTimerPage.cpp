@@ -22,7 +22,7 @@ namespace ui
         auto* body = getBodyLayout();
 
         mTimerLabel = new QLabel("00:00:00", this);
-        mTimerLabel->setObjectName("mTimerLabel");
+        mTimerLabel->setObjectName("TimerLabel");
         mTimerLabel->setAlignment(Qt::AlignCenter);
 
         // Date
@@ -85,14 +85,14 @@ namespace ui
         auto* footer = getFooterLayout();
 
         mStartBtn = new QPushButton("START", this);
-        mStartBtn->setObjectName("StartButton");
+        mStartBtn->setObjectName("StartBtn");
         mStartBtn->setCursor(QCursor(Qt::PointingHandCursor));
         mStartBtn->setFixedHeight(220);
         mStartBtn->setFixedHeight(44);
         mStartBtn->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 
         mReturnBtn = new QPushButton("BACK", this);
-        mReturnBtn->setObjectName("ReturnButton");
+        mReturnBtn->setObjectName("ReturnBtn");
         mReturnBtn->setCursor(QCursor(Qt::PointingHandCursor));
         mReturnBtn->setFixedHeight(32);
         mReturnBtn->setFixedWidth(84);

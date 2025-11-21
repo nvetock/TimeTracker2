@@ -26,10 +26,14 @@ int main(int argc, char* argv[])
     int f3 = QFontDatabase::addApplicationFont(":/fonts/resources/fonts/Barlow-Medium.ttf");
     int f4 = QFontDatabase::addApplicationFont(":/fonts/resources/fonts/Barlow-SemiBold.ttf");
 
-    if (QFile qssFile(":/styles/app.qss"); qssFile.open(QFile::ReadOnly | QFile::Text))
+    if (QFile qssFile(":/styles/resources/styles/app.qss"); qssFile.open(QFile::ReadOnly | QFile::Text))
     {
         const QString style = QString::fromUtf8(qssFile.readAll());
         app.setStyleSheet(style);
+    }
+    else
+    {
+        qWarning() << "[main] Could not read app.qss";
     }
 
     if (f1 == -1 || f2 == -1 || f3 == -1 || f4 == -1)
@@ -85,7 +89,7 @@ int main(int argc, char* argv[])
         {
             qDebug() << "[main] ReminderTwo requested.";
         });
-    /*
+
     QObject::connect(appController, &timetracker::AppController::hardStopExecuted,
         []()
         {
@@ -96,7 +100,6 @@ int main(int argc, char* argv[])
     appController->startSessionForTask(
         "userNNName", "project123", "task2222", "description here..."
     );
-     */
 
 //Timer State
     QObject::connect(sMgr, &timetracker::SessionManager::sessionStarted,
