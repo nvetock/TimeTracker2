@@ -6,13 +6,14 @@
 #include <QFontDatabase>
 #include <QFile>
 
-#include "src/ui/TimeTrackerPanel.h"
 #include "domain/WorkSession.h"
 #include "idle/IdleDetectorFactory.h"
 #include "appservice/ActivityMonitor.h"
 #include "appservice/ReminderScheduler.h"
 #include "appservice/SessionManager.h"
 #include "appservice/AppController.h"
+#include "src/ui/TimeTrackerPanel.h"
+#include "src/ui/TrackWorkTimerPage.h"
 
 
 int main(int argc, char* argv[])
@@ -45,9 +46,6 @@ int main(int argc, char* argv[])
     constexpr int warningThresh{10};
     constexpr int hardStopThresh{5};
 
-    auto* panel = new ui::TimeTrackerPanel();
-    panel->show();
-
     // Inactivity tester
     auto idleDetector = timetracker::createIdleDetector();
 
@@ -68,6 +66,13 @@ int main(int argc, char* argv[])
     appController->initialize();
 
 
+    auto* panel = new ui::TimeTrackerPanel{};
+
+    auto* trackPage = new ui::TrackWorkTimerPage{};
+    panel->setPage(trackPage);
+
+    panel->show();
+
 // CONNECTIONS
     QObject::connect(appController, &timetracker::AppController::reminderOneRequested,
         []()
@@ -80,7 +85,7 @@ int main(int argc, char* argv[])
         {
             qDebug() << "[main] ReminderTwo requested.";
         });
-
+    /*
     QObject::connect(appController, &timetracker::AppController::hardStopExecuted,
         []()
         {
@@ -88,10 +93,10 @@ int main(int argc, char* argv[])
             QCoreApplication::quit();
         });
 
-
     appController->startSessionForTask(
         "userNNName", "project123", "task2222", "description here..."
     );
+     */
 
 //Timer State
     QObject::connect(sMgr, &timetracker::SessionManager::sessionStarted,

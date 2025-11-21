@@ -29,7 +29,7 @@ namespace ui
         void setTitle(const QString& title);
         QLabel* getTitleLabel() const { return mTitleLabel; }
 
-        void showBackButton(bool show);
+        void showBackButton(bool show) const;
         QPushButton* getBackButton() const { return mBackChevron; }
     signals:
         void backRequested();
