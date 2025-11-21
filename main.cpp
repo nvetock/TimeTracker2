@@ -13,6 +13,7 @@
 #include "appservice/SessionManager.h"
 #include "appservice/AppController.h"
 #include "src/ui/TimeTrackerPanel.h"
+#include "src/ui/TrackWorkSetupPage.h"
 #include "src/ui/TrackWorkTimerPage.h"
 
 
@@ -72,7 +73,7 @@ int main(int argc, char* argv[])
 
     auto* panel = new ui::TimeTrackerPanel{};
 
-    auto* trackPage = new ui::TrackWorkTimerPage{};
+    auto* trackPage = new ui::TrackWorkSetupPage{};
     panel->setPage(trackPage);
 
     panel->show();

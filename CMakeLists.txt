@@ -57,6 +57,7 @@ set(TIMETRACKER_SOURCES
         src/ui/GradientFrame.h
         src/ui/BaseCardPage.cpp
         src/ui/TrackWorkTimerPage.cpp
+        src/ui/TrackWorkSetupPage.cpp
 )
 
 
