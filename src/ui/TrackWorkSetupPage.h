@@ -21,6 +21,7 @@ namespace ui
         void setAvailableProjects(const QStringList& projects);
 
         // Read current values
+        QString getDate() const;
         QString getSelectedTaskName() const;
         QString getSelectedProjectName() const;
         QString getDescription() const;

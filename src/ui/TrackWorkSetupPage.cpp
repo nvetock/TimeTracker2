@@ -103,6 +103,11 @@ namespace ui
         rebuildProjectCombo(projects);
     }
 
+    QString TrackWorkSetupPage::getDate() const
+    {
+        return mDate->text();
+    }
+
     QString TrackWorkSetupPage::getSelectedTaskName() const
     {
         if (!mTaskCombo) return {};
