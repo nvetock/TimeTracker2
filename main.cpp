@@ -15,7 +15,7 @@
 #include "src/ui/TimeTrackerPanel.h"
 #include "src/ui/TrackWorkSetupPage.h"
 #include "src/ui/TrackWorkTimerPage.h"
-
+#include "src/ui/UiFlowController.h"
 
 int main(int argc, char* argv[])
 {
@@ -72,11 +72,14 @@ int main(int argc, char* argv[])
 
 
     auto* panel = new ui::TimeTrackerPanel{};
-
-    auto* trackPage = new ui::TrackWorkSetupPage{};
-    panel->setPage(trackPage);
+    auto* flow = new ui::UiFlowController(panel, &app);
 
     panel->show();
+    flow->start();
+
+    //auto* trackPage = new ui::TrackWorkSetupPage{};
+    //panel->setPage(trackPage);
+
 
 // CONNECTIONS
     QObject::connect(appController, &timetracker::AppController::reminderOneRequested,

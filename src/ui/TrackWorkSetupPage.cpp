@@ -234,7 +234,7 @@ namespace ui
 
     void TrackWorkSetupPage::handleReady()
     {
-        emit readyClicked(
+        emit readyClicked(getDate(),
             getSelectedTaskName(),
             getSelectedProjectName(),
             getDescription()

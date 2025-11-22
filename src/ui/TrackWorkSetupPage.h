@@ -27,7 +27,8 @@ namespace ui
         QString getDescription() const;
 
     signals:
-        void readyClicked(const QString& taskName,
+        void readyClicked(const QString& date,
+            const QString& taskName,
             const QString& projectName,
             const QString& description);
 

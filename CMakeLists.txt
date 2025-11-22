@@ -32,6 +32,8 @@ set(TIMETRACKER_SOURCES
         src/WorkSession.cpp
 
         # infrastructure linking
+        src/AppSettingsRepository.cpp
+        include/infra/AppSettingsRepository.h
 
         # idle detector linking
         include/idle/IdleDetectorFactory.h
@@ -58,6 +60,14 @@ set(TIMETRACKER_SOURCES
         src/ui/BaseCardPage.cpp
         src/ui/TrackWorkTimerPage.cpp
         src/ui/TrackWorkSetupPage.cpp
+        src/ui/ExportPage.cpp
+        src/ui/LogHistoryPage.cpp
+        src/ui/SettingsPage.cpp
+        src/ui/NewItemDialog.cpp
+        src/ui/UiFlowController.h
+        src/ui/UiFlowController.cpp
+        src/ui/MainMenuPage.cpp
+
 )
 
 

@@ -6,6 +6,8 @@
 #include "appservice/ReminderScheduler.h"
 #include "appservice/SessionManager.h"
 
+#include "infra/AppSettingsRepository.h"
+
 namespace timetracker
 {
     AppController::AppController(ActivityMonitor* aMtr,
