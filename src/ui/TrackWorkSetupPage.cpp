@@ -8,12 +8,13 @@
 #include <QFormLayout>
 #include <QVBoxLayout>
 #include <QCursor>
+#include <QLabel>
 
 namespace ui
 {
     TrackWorkSetupPage::TrackWorkSetupPage(QWidget* parent)
         : BaseCardPage{parent}
-        , mDateEdit{nullptr}
+        , mDate{nullptr}
         , mTaskCombo{nullptr}
         , mProjectCombo{nullptr}
         , mDescriptionEdit{nullptr}
@@ -31,9 +32,8 @@ namespace ui
         formLayout->setSpacing(0);
 
         // Date
-        mDateEdit = new QDateEdit(QDate::currentDate(), this);
-        mDateEdit->setCalendarPopup(true);
-        mDateEdit->setObjectName("DateEdit");
+        mDate = new QLabel(QDate::currentDate().toString(), this);
+        mDate->setObjectName("Date");
 
         // Task combo
         mTaskCombo = new QComboBox(this);
@@ -51,7 +51,7 @@ namespace ui
         mDescriptionEdit->setPlaceholderText("Work description (optional)");
 
         // Labels on the left, widgets on the right
-        formLayout->addRow(tr("DATE"), mDateEdit);
+        formLayout->addRow(tr("DATE"), mDate);
         formLayout->addRow(tr("TASK"), mTaskCombo);
         formLayout->addRow(tr("PROJECT"), mProjectCombo);
         formLayout->addRow(QString(), mDescriptionEdit);
@@ -103,11 +103,6 @@ namespace ui
         rebuildProjectCombo(projects);
     }
 
-    QDate TrackWorkSetupPage::getSelectedDate() const
-    {
-        return mDateEdit ? mDateEdit->date() : QDate::currentDate();
-    }
-
     QString TrackWorkSetupPage::getSelectedTaskName() const
     {
         if (!mTaskCombo) return {};
@@ -140,8 +135,6 @@ namespace ui
             ? mDescriptionEdit->text().trimmed()
             : QString();
     }
-
-
 
     void TrackWorkSetupPage::rebuildTaskCombo(const QStringList& tasks)
     {
@@ -237,7 +230,6 @@ namespace ui
     void TrackWorkSetupPage::handleReady()
     {
         emit readyClicked(
-            getSelectedDate(),
             getSelectedTaskName(),
             getSelectedProjectName(),
             getDescription()

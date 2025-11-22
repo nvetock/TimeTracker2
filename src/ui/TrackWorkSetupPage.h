@@ -21,14 +21,12 @@ namespace ui
         void setAvailableProjects(const QStringList& projects);
 
         // Read current values
-        QDate getSelectedDate() const;
         QString getSelectedTaskName() const;
         QString getSelectedProjectName() const;
         QString getDescription() const;
 
     signals:
-        void readyClicked(const QDate& date,
-            const QString& taskName,
+        void readyClicked(const QString& taskName,
             const QString& projectName,
             const QString& description);
 
@@ -45,7 +43,7 @@ namespace ui
         void rebuildTaskCombo(const QStringList& tasks);
         void rebuildProjectCombo(const QStringList& projects);
 
-        QDateEdit* mDateEdit;
+        QLabel* mDate;
         QComboBox* mTaskCombo;
         QComboBox* mProjectCombo;
         QLineEdit* mDescriptionEdit;
