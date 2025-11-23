@@ -22,7 +22,11 @@ namespace ui
         explicit BaseCardPage(QWidget* parent = nullptr);
         ~BaseCardPage() = default;
 
+        // Toggles between recording state being on or off
         void setRecordingActive(bool active);
+
+        // Toggle between recording state being paused or running
+        void setIdlePaused(bool paused);
 
         QVBoxLayout* getHeaderLayout() const { return mHeaderLayout; }
         QVBoxLayout* getBodyLayout() const { return mBodyLayout; }

@@ -152,59 +152,74 @@ namespace ui
                 this, &TrackWorkTimerPage::onReturnButtonClicked);
     }
 
+    void TrackWorkTimerPage::applySessionStatus(timetracker::WorkSession::Status status)
+    {
+        using Status = timetracker::WorkSession::Status;
+        switch (status)
+        {
+        case Status::Running:
+            if (mUiTimer && !mUiTimer->isActive()) mUiTimer->start();
+            setTitle("RUNNING");
+            mIsPaused = false;
+            setRecordingActive(true);
+            setIdlePaused(false);
+
+            mStartBtn->setVisible(false);
+            mReturnBtn->setVisible(false);
+            mPauseBtn->setVisible(true);
+            mStopBtn->setVisible(true);
+            mPauseBtn->setText("PAUSE");
+            break;
+        case Status::Paused:
+            if (mUiTimer && mUiTimer->isActive()) mUiTimer->stop();
+            setTitle("PAUSED");
+            mIsPaused = true;
+            setRecordingActive(false);
+            setIdlePaused(true);
+            mPauseBtn->setText("RESUME");
+            break;
+        case Status::Completed:
+            if (mUiTimer && mUiTimer->isActive()) mUiTimer->stop();
+            setTitle("COMPLETED");
+            mIsPaused = false;
+            setRecordingActive(false);
+            setIdlePaused(false);
+
+            mStartBtn->setVisible(false);
+            mReturnBtn->setVisible(true);
+            mPauseBtn->setVisible(false);
+            mStopBtn->setVisible(false);
+            break;
+        case Status::Timeout:
+            if (mUiTimer && mUiTimer->isActive()) mUiTimer->stop();
+            setTitle("TIMEOUT");
+            mIsPaused = false;
+            setRecordingActive(false);
+            setIdlePaused(false);
+
+            mStartBtn->setVisible(false);
+            mReturnBtn->setVisible(true);
+            mPauseBtn->setVisible(false);
+            mStopBtn->setVisible(false);
+        default:
+            break;
+        }
+    }
+
     void TrackWorkTimerPage::onStartButtonClicked()
     {
         mElapsedSeconds = 0;
-        mIsPaused = false;
         updateTimerLabel();
-
-        setTitle("RUNNING");
-
-        mStartBtn->setVisible(false);
-        mReturnBtn->setVisible(false);
-        mPauseBtn->setVisible(true);
-        mStopBtn->setVisible(true);
-
-        setRecordingActive(true);
-
-        mUiTimer->start();
-
         emit startClicked();
     }
 
     void TrackWorkTimerPage::onPauseButtonClicked()
     {
-        if (!mIsPaused)
-        {
-            mIsPaused = true;
-            mUiTimer->stop();
-            setTitle("PAUSED");
-            mPauseBtn->setText("RESUME");
-            setRecordingActive(false);
-        }
-        else
-        {
-            mIsPaused = false;
-            mUiTimer->start();
-            setTitle("RUNNING");
-            mPauseBtn->setText("PAUSE");
-            setRecordingActive(true);
-        }
-
         emit pauseClicked();
     }
 
     void TrackWorkTimerPage::onStopButtonClicked()
     {
-        mUiTimer->stop();
-        mIsPaused = false;
-
-        setRecordingActive(false);
-        setTitle("COMPLETED");
-
-        mPauseBtn->setEnabled(false);
-        mStopBtn->setEnabled(false);
-
         emit stopClicked();
     }
 

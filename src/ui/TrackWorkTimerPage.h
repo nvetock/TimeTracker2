@@ -1,6 +1,7 @@
 #pragma once
 
 #include "BaseCardPage.h"
+#include "domain/WorkSession.h"
 
 class QLineEdit;
 class QLabel;
@@ -23,6 +24,8 @@ namespace ui
 
         QPushButton* getStartButton() const { return mStartBtn; }
         QPushButton* getReturnButton() const { return mReturnBtn; }
+
+        void applySessionStatus(timetracker::WorkSession::Status status);
         bool isPaused() const { return mIsPaused; }
     signals:
         void startClicked();

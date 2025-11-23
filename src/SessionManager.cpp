@@ -53,6 +53,7 @@ namespace timetracker
         {
             emit sessionStarted(*mCurrentSession);
             emit sessionUpdated(*mCurrentSession);
+            emit sessionStatusChanged(*mCurrentSession);
         }
         else
         {
@@ -67,6 +68,7 @@ namespace timetracker
         mCurrentSession->stop();
         emit sessionStopped(*mCurrentSession);
         emit sessionUpdated(*mCurrentSession); // stopping updates WorkSession
+        emit sessionStatusChanged(*mCurrentSession);
     }
 
     void SessionManager::pauseSession()
@@ -75,6 +77,7 @@ namespace timetracker
 
         mCurrentSession->pause();
         emit sessionPaused(*mCurrentSession);
+        emit sessionStatusChanged(*mCurrentSession);
 
     }
 
@@ -86,6 +89,7 @@ namespace timetracker
 
         emit sessionResumed(*mCurrentSession);
         emit sessionUpdated(*mCurrentSession);
+        emit sessionStatusChanged(*mCurrentSession);
     }
 
     void SessionManager::onUserIdle()

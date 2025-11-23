@@ -160,27 +160,7 @@ namespace ui
                     {
                         if (!page) return;
 
-                        switch (session.getStatus())
-                        {
-                        case timetracker::WorkSession::Status::Running:
-                            page->setTitle("RUNNING");
-                            page->setRecordingActive(true);
-                            break;
-                        case timetracker::WorkSession::Status::Paused:
-                            page->setTitle("PAUSED");
-                            page->setRecordingActive(false);
-                            break;
-                        case timetracker::WorkSession::Status::Completed:
-                            page->setTitle("COMPLETED");
-                            page->setRecordingActive(false);
-                            break;
-                        case timetracker::WorkSession::Status::Timeout:
-                            page->setTitle("TIMEOUT");
-                            page->setRecordingActive(false);
-                            break;
-                        default:
-                            break;
-                        }
+                        page->applySessionStatus(session.getStatus());
                     });
         }
 

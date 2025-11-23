@@ -50,11 +50,11 @@ namespace timetracker
                          mActivityMtr, &ActivityMonitor::stopMonitoring);
 
         // ActivityMonitor signals
-        QObject::connect(mActivityMtr, &ActivityMonitor::userIsIdle,
-                         mSessionMgr, &SessionManager::onUserIdle);
-
-        QObject::connect(mActivityMtr, &ActivityMonitor::userNoLongerIdle,
-                         mSessionMgr, &SessionManager::onUserNotIdle);
+        //QObject::connect(mActivityMtr, &ActivityMonitor::userIsIdle,
+        //                 mSessionMgr, &SessionManager::onUserIdle);
+//
+        //QObject::connect(mActivityMtr, &ActivityMonitor::userNoLongerIdle,
+        //                 mSessionMgr, &SessionManager::onUserNotIdle);
 
 
         /**
@@ -80,6 +80,15 @@ namespace timetracker
         QObject::connect(mActivityMtr, &ActivityMonitor::userNoLongerIdle,
                          mReminderSched, &ReminderScheduler::onUserNotIdle);
 
+
+        /**
+         * ActivityMonitor <--> AppController
+         */
+        QObject::connect(mActivityMtr, &ActivityMonitor::userIsIdle,
+           this, &AppController::pauseCurrentSession);
+
+        QObject::connect(mActivityMtr, &ActivityMonitor::userNoLongerIdle,
+            this, &AppController::unpauseCurrentSession);
 
         /**
          * ReminderScheduler <--> AppController

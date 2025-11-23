@@ -47,6 +47,16 @@ namespace ui
         mSideTab->update();
     }
 
+    void BaseCardPage::setIdlePaused(bool paused)
+    {
+        if (!mSideTab) return;
+
+        mSideTab->setProperty("idle", paused);
+        mSideTab->style()->unpolish(mSideTab);
+        mSideTab->style()->polish(mSideTab);
+        mSideTab->update();
+    }
+
     void BaseCardPage::buildShell()
 {
     // ---- Root layout (holds [sidetab][maincard])
@@ -58,6 +68,8 @@ namespace ui
     mSideTab = new SideTab{this};
     mSideTab->setObjectName("SideTab");
     mSideTab->setFixedSize(32, 164);
+    mSideTab->setProperty("recording", false);
+    mSideTab->setProperty("idle", false);
     mRootLayout->addWidget(mSideTab, 0, Qt::AlignTop);
 
     // --- Main card
