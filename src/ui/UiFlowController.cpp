@@ -6,19 +6,25 @@
 #include "TrackWorkTimerPage.h"
 #include "LogHistoryPage.h"
 #include "SettingsPage.h"
-#include "NewItemDialog.h"
 
 #include <QCoreApplication>
+#include <QDebug>
 #include <QDate>
+
+#include "appservice/AppController.h"
 
 namespace ui
 {
     UiFlowController::UiFlowController(TimeTrackerPanel* panel,
+                                       timetracker::AppController* appCtrl,
+                                       timetracker::SessionManager* sMgr,
                                        QObject* parent)
-        : QObject(parent)
-        , mPanel(panel)
-        , mSettingsRepo(this)
-        , mSettings(mSettingsRepo.load())
+        : QObject{parent}
+        , mPanel{panel}
+        , mAppController{appCtrl}
+        , mSessionManager{sMgr}
+        , mSettingsRepo{this}
+        , mSettings{mSettingsRepo.load()}
     {
     }
 
@@ -87,7 +93,7 @@ namespace ui
             }
 
 
-            showTrackWorkTimer(date, task, project, desc);
+            showTrackWorkTimer(date, t, p, desc);
         });
 
         mPanel->setPage(page);
@@ -100,21 +106,55 @@ namespace ui
     {
         auto* page = new TrackWorkTimerPage(mPanel);
 
-        page->setTitle("TRACK WORK");
-        page->setTitle("RUNNING");
+        page->setTitle("NOT STARTED");
         page->setTimerText("00:00:00");
         page->setDateText(date);
         page->setProjectText(project);
         page->setTaskText(task);
+        page->setDescriptionText(description);
 
         connect(page, &TrackWorkTimerPage::returnClicked,
                 this, &UiFlowController::showTrackWorkSetup);
 
+        connect(page, &TrackWorkTimerPage::startClicked,
+            this, [this, task, project, description]()
+            {
+                if (!mAppController) return;
+
+                // Grab username from settings
+                const QString userName = mSettings.userName.isEmpty()
+                ? QStringLiteral("User")
+                : mSettings.userName;
+
+                mAppController->startSessionForTask( userName, project, task, description);
+            });
+
+        connect(page, &TrackWorkTimerPage::pauseClicked,
+            this, [this]()
+            {
+                if (!mAppController) return;
+
+                if (mAppController->getPauseStatus())
+                    mAppController->unpauseCurrentSession();
+                    // ToDo: Change button text here. & below
+                else
+                {
+                    mAppController->pauseCurrentSession();
+                }
+            });
+
+        connect(page, &TrackWorkTimerPage::stopClicked,
+            this, [this]()
+            {
+                if (!mAppController) return;
+
+                mAppController->stopCurrentSession();
+            });
         // Here is where you'd hook page->startClicked() to AppController
         // and also a STOP button to stop the session, etc.
 
         mPanel->setPage(page);
-        mPanel->setOpen(false); // slide mostly closed while running
+        mPanel->setOpen(true); // slide mostly closed while running
     }
 
     void UiFlowController::showLogHistory()
@@ -163,42 +203,4 @@ namespace ui
         mPanel->setPage(page);
     }
 
-    void UiFlowController::handleAddNewTask()
-    {
-        NewItemDialog dlg("Add new task",
-                          "Enter a name for the new task:",
-                          mPanel);
-        if (dlg.exec() == QDialog::Accepted)
-        {
-            const QString name = dlg.text();
-            if (!name.isEmpty())
-            {
-                if (!mSettings.tasks.contains(name))
-                    mSettings.tasks.append(name);
-                mSettingsRepo.save(mSettings);
-            }
-        }
-
-        // After adding, show setup page again with refreshed lists
-        showTrackWorkSetup();
-    }
-
-    void UiFlowController::handleAddNewProject()
-    {
-        NewItemDialog dlg("Add new project",
-                          "Enter a name for the new project:",
-                          mPanel);
-        if (dlg.exec() == QDialog::Accepted)
-        {
-            const QString name = dlg.text();
-            if (!name.isEmpty())
-            {
-                if (!mSettings.projects.contains(name))
-                    mSettings.projects.append(name);
-                mSettingsRepo.save(mSettings);
-            }
-        }
-
-        showTrackWorkSetup();
-    }
 }

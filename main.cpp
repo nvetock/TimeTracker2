@@ -72,7 +72,7 @@ int main(int argc, char* argv[])
 
 
     auto* panel = new ui::TimeTrackerPanel{};
-    auto* flow = new ui::UiFlowController(panel, &app);
+    auto* flow = new ui::UiFlowController(panel, appController, sMgr, &app);
 
     panel->show();
     flow->start();
@@ -101,9 +101,9 @@ int main(int argc, char* argv[])
             QCoreApplication::quit();
         });
 
-    appController->startSessionForTask(
-        "userNNName", "project123", "task2222", "description here..."
-    );
+    // appController->startSessionForTask(
+    //     "userNNName", "project123", "task2222", "description here..."
+    // );
 
 //Timer State
     QObject::connect(sMgr, &timetracker::SessionManager::sessionStarted,

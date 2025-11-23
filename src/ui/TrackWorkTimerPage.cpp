@@ -4,6 +4,7 @@
 #include <QLabel>
 #include <QPushButton>
 #include <QVBoxLayout>
+#include <QLineEdit>
 
 namespace ui
 {
@@ -13,8 +14,12 @@ namespace ui
         , mDateLabel{nullptr}
         , mProjectLabel{nullptr}
         , mTaskLabel{nullptr}
+        , mDescription{nullptr}
         , mStartBtn{nullptr}
+        , mPauseBtn{nullptr}
+        , mStopBtn{nullptr}
         , mReturnBtn{nullptr}
+        , mUiTimer{nullptr}
     {
         setTitle("NOT STARTED");
         showBackButton(false);
@@ -62,14 +67,19 @@ namespace ui
         mTaskLabel->setAlignment(Qt::AlignCenter);
         mTaskLabel->setWordWrap(true);
 
-        auto* tdptGroup = new QVBoxLayout();
-        tdptGroup->setSpacing(24);
-        tdptGroup->setContentsMargins(0, 0, 0, 0);
-        tdptGroup->addLayout(tdpGroup);
-        tdptGroup->addWidget(mTaskLabel);
+        mDescription = new QLineEdit("default description.");
+        mDescription->setObjectName("Description");
+        mDescription->setAlignment(Qt::AlignCenter);
+
+        auto* tdpttGroup = new QVBoxLayout();
+        tdpttGroup->setSpacing(24);
+        tdpttGroup->setContentsMargins(0, 0, 0, 0);
+        tdpttGroup->addLayout(tdpGroup);
+        tdpttGroup->addWidget(mTaskLabel);
+        tdpttGroup->addWidget(mDescription);
 
         // Add to body area
-        body->addLayout(tdptGroup);
+        body->addLayout(tdpttGroup);
         auto fixedText = [](QLabel* label)
         {
             label->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
@@ -85,17 +95,26 @@ namespace ui
         auto* footer = getFooterLayout();
 
         mStartBtn = new QPushButton("START", this);
-        mStartBtn->setObjectName("StartBtn");
+        mStartBtn->setObjectName("PrimaryBtn");
         mStartBtn->setCursor(QCursor(Qt::PointingHandCursor));
-        mStartBtn->setFixedHeight(220);
+        //mStartBtn->setFixedWidth(220);
         mStartBtn->setFixedHeight(44);
         mStartBtn->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 
+        mPauseBtn = new QPushButton("PAUSE", this);
+        mPauseBtn->setObjectName("PrimaryBtn");
+        mPauseBtn->setVisible(false);
+
+        mStopBtn = new QPushButton("STOP", this);
+        mStopBtn->setObjectName("SecondaryBtn");
+        mStopBtn->setFlat(true);
+        mStopBtn->setVisible(false);
+
         mReturnBtn = new QPushButton("BACK", this);
-        mReturnBtn->setObjectName("ReturnBtn");
+        mReturnBtn->setObjectName("SecondaryBtn");
         mReturnBtn->setCursor(QCursor(Qt::PointingHandCursor));
-        mReturnBtn->setFixedHeight(32);
-        mReturnBtn->setFixedWidth(84);
+        //mReturnBtn->setFixedHeight(32);
+        //mReturnBtn->setFixedWidth(84);
         mReturnBtn->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
         mReturnBtn->setFlat(true);
 
@@ -107,8 +126,15 @@ namespace ui
 
         footer->addLayout(btnGroup);
 
+        // CONNECTIONS
         connect(mStartBtn, &QPushButton::clicked,
                 this, &TrackWorkTimerPage::startClicked);
+
+        connect(mPauseBtn, &QPushButton::clicked,
+            this, &TrackWorkTimerPage::pauseClicked);
+
+        connect(mStopBtn, &QPushButton::clicked,
+            this, &TrackWorkTimerPage::stopClicked);
 
         connect(mReturnBtn, &QPushButton::clicked,
                 this, &TrackWorkTimerPage::returnClicked);
@@ -132,5 +158,10 @@ namespace ui
     void TrackWorkTimerPage::setTaskText(const QString& text)
     {
         if (mTaskLabel) mTaskLabel->setText(text);
+    }
+
+    void TrackWorkTimerPage::setDescriptionText(const QString& text)
+    {
+        if (mDescription) mDescription->setText(text);
     }
 } // ui

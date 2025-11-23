@@ -69,10 +69,11 @@ namespace ui
         mReadyBtn->setObjectName("PrimaryBtn");
         mReadyBtn->setCursor(Qt::PointingHandCursor);
         mReadyBtn->setFixedHeight(44);
-        mReadyBtn->setFixedWidth(44);
+        mReadyBtn->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+        //mReadyBtn->setFixedWidth(44);
 
         mBackBtn = new QPushButton(tr("BACK"), this);
-        mBackBtn->setObjectName("ReturnBtn");
+        mBackBtn->setObjectName("SecondaryBtn");
         mBackBtn->setCursor(Qt::PointingHandCursor);
         mBackBtn->setFlat(true);
 
@@ -149,21 +150,6 @@ namespace ui
                 mTaskCombo->setCurrentIndex(-1);
             }
         }
-
-        // // Special 'Add new..' task appended
-        // const int addIdx = mTaskCombo->count();
-        // mTaskCombo->addItem(tr("Add new task..."));
-        // mTaskCombo->setItemData(addIdx, QStringLiteral("add-task"), RoleKind);
-        //
-        // // Start with no selection
-        // if (tasks.isEmpty())
-        // {
-        //     mTaskCombo->setCurrentIndex(addIdx);
-        // }
-        // else
-        // {
-        //     mTaskCombo->setCurrentIndex(0);
-        // }
     }
 
     void TrackWorkSetupPage::rebuildProjectCombo(const QStringList& projects)
@@ -179,11 +165,6 @@ namespace ui
 
             mProjectCombo->addItem(trimmed);
         }
-        //
-        // // Special 'Add new..' task appended
-        // const int addIdx = mProjectCombo->count();
-        // mProjectCombo->addItem(tr("Add new project..."));
-        // mProjectCombo->setItemData(addIdx, QStringLiteral("add-project"), RoleKind);
 
         if (mProjectCombo->count() > 0)
         {

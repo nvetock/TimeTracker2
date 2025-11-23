@@ -32,7 +32,7 @@ namespace timetracker
         void stopSession(bool aborted = false);
         void pauseSession();
         void unpauseSession();
-
+        bool getPauseStatus() const { return mCurrentSession->getPauseStatus(); }
         /**
          * @return The current WorkSession object being read/written to.
          */

@@ -38,6 +38,7 @@ namespace timetracker
         void unpauseCurrentSession() const;
         void stopCurrentSession(bool aborted = false) const;
 
+        bool getPauseStatus() const;
         /**
          * Used to confirm a user is still working.
          */

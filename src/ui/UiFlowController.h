@@ -3,6 +3,13 @@
 #include <QObject>
 #include "infra/AppSettingsRepository.h"
 
+namespace timetracker
+{
+    class AppController;
+    class SessionManager;
+    class WorkSession;
+}
+
 namespace ui
 {
     class TimeTrackerPanel;
@@ -18,6 +25,8 @@ namespace ui
 
     public:
         UiFlowController(TimeTrackerPanel* panel,
+                         timetracker::AppController* appCtrl,
+                         timetracker::SessionManager* sMgr,
                          QObject* parent = nullptr);
 
         void start(); // show main menu
@@ -33,12 +42,10 @@ namespace ui
         void showLogHistory();
         void showSettings();
 
-        // Handlers
-        void handleAddNewTask();
-        void handleAddNewProject();
-
     private:
-        TimeTrackerPanel*           mPanel{nullptr};
+        TimeTrackerPanel*            mPanel;
+        timetracker::AppController*  mAppController;
+        timetracker::SessionManager* mSessionManager;
         infra::AppSettingsRepository mSettingsRepo;
         infra::AppSettings           mSettings;
     };

@@ -133,7 +133,7 @@ namespace ui
     {
         if (mTitleLabel)
         {
-            mTitleLabel->setText(title);
+            mTitleLabel->setText(title.toUpper());
         }
     }
 } // ui

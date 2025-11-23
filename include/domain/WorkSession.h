@@ -23,6 +23,7 @@ namespace timetracker
 
         void pause(const QTime& pauseTime = QTime::currentTime());
         void unpause(const QTime& unpauseTime = QTime::currentTime());
+        bool getPauseStatus() const { return mStatus == Status::Paused;}
 
         qint64 getTotalElapsedSeconds() const;
         qint64 getActiveSeconds() const;

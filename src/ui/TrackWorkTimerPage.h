@@ -2,6 +2,7 @@
 
 #include "BaseCardPage.h"
 
+class QLineEdit;
 class QLabel;
 class QPushButton;
 
@@ -18,12 +19,15 @@ namespace ui
         void setDateText(const QString& text);
         void setProjectText(const QString& text);
         void setTaskText(const QString& text);
+        void setDescriptionText(const QString& text);
 
         QPushButton* getStartButton() const { return mStartBtn; }
         QPushButton* getReturnButton() const { return mReturnBtn; }
 
     signals:
         void startClicked();
+        void pauseClicked();
+        void stopClicked();
         void returnClicked();
 
     private:
@@ -31,8 +35,12 @@ namespace ui
         QLabel* mDateLabel;
         QLabel* mProjectLabel;
         QLabel* mTaskLabel;
+        QLineEdit* mDescription;
         QPushButton* mStartBtn;
+        QPushButton* mPauseBtn;
+        QPushButton* mStopBtn;
         QPushButton* mReturnBtn;
 
+        QTimer* mUiTimer;
     };
 } // ui

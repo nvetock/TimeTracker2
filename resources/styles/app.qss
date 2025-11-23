@@ -44,7 +44,7 @@ QLabel#TaskLabel {
     font-size: 18px;
 }
 
-QPushButton#StartBtn {
+QPushButton#PrimaryBtn {
     background-color: #00E099;
     color: #262626;
     font-family: "Barlow Semi Condensed", Arial, sans-serif;
@@ -57,15 +57,15 @@ QPushButton#StartBtn {
     border: none;
 }
 
-QPushButton#StartBtn:hover {
+QPushButton#PrimaryBtn:hover {
     background-color: #00F5C6;
 }
 
-QPushButton#StartBtn:pressed {
+QPushButton#PrimaryBtn:pressed {
     background-color: #00C385;
 }
 
-QPushButton#ReturnBtn {
+QPushButton#SecondaryBtn {
     background-color: transparent;
     background: transparent;
     border: none;
@@ -75,7 +75,7 @@ QPushButton#ReturnBtn {
     font-weight: 700;
 }
 
-QPushButton#ReturnBtn:hover {
+QPushButton#SecondaryBtn:hover {
     color: #00F5C6;
 }
 
