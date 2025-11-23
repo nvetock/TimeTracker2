@@ -163,6 +163,7 @@ namespace ui
             mIsPaused = false;
             setRecordingActive(true);
             setIdlePaused(false);
+            setEnded(false);
 
             mStartBtn->setVisible(false);
             mReturnBtn->setVisible(false);
@@ -184,6 +185,7 @@ namespace ui
             mIsPaused = false;
             setRecordingActive(false);
             setIdlePaused(false);
+            setEnded(true);
 
             mStartBtn->setVisible(false);
             mReturnBtn->setVisible(true);
@@ -196,6 +198,7 @@ namespace ui
             mIsPaused = false;
             setRecordingActive(false);
             setIdlePaused(false);
+            setEnded(true);
 
             mStartBtn->setVisible(false);
             mReturnBtn->setVisible(true);

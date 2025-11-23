@@ -56,10 +56,12 @@ namespace ui
 
         const bool recording = property("recording").toBool();
         const bool idle = property("idle").toBool();
+        const bool ended = property("ended").toBool();
 
         QColor baseColor{};
         if (recording) baseColor = QColor("#FF3B30"); // red
         else if (idle) baseColor = QColor("#FFC107");
+        else if (ended) baseColor = QColor("#CCCCCC");
         else baseColor = QColor("#00E099");
         //QColor hoverColor("#00F5C6");
         QColor fill = mHover

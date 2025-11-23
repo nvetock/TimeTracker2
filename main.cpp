@@ -98,7 +98,7 @@ int main(int argc, char* argv[])
         []()
         {
             qDebug() << "[main] Hard stop requested.";
-            QCoreApplication::quit();
+            //QCoreApplication::quit();
         });
 
     // appController->startSessionForTask(

@@ -28,6 +28,9 @@ namespace ui
         // Toggle between recording state being paused or running
         void setIdlePaused(bool paused);
 
+        // Called when a session is completed or on timeout
+        void setEnded(bool ended);
+
         QVBoxLayout* getHeaderLayout() const { return mHeaderLayout; }
         QVBoxLayout* getBodyLayout() const { return mBodyLayout; }
         QVBoxLayout* getFooterLayout() const { return mFooterLayout; }

@@ -57,6 +57,16 @@ namespace ui
         mSideTab->update();
     }
 
+    void BaseCardPage::setEnded(bool ended)
+    {
+        if (!mSideTab) return;
+
+        mSideTab->setProperty("ended", ended);
+        mSideTab->style()->unpolish(mSideTab);
+        mSideTab->style()->polish(mSideTab);
+        mSideTab->update();
+    }
+
     void BaseCardPage::buildShell()
 {
     // ---- Root layout (holds [sidetab][maincard])
