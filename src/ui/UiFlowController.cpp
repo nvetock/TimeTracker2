@@ -67,14 +67,28 @@ namespace ui
                              const QString& desc)
         {
             // Here you could also talk to AppController to start a session
+            QString t = task.trimmed();
+            QString p = project.trimmed();
+
+            if (!task.isEmpty() && !mSettings.tasks.contains(t, Qt::CaseInsensitive))
+            {
+                mSettings.tasks.append(t);
+            }
+
+            if (!project.isEmpty() && !mSettings.projects.contains(p, Qt::CaseInsensitive))
+            {
+                mSettings.projects.append(p);
+            }
+
+            if (!mSettingsRepo.save(mSettings))
+            {
+                qWarning() << "[UIFlowController} showTrackWorkSetup()\n"
+                           << "  | Settings did not save to mSettingsRepo.";
+            }
+
+
             showTrackWorkTimer(date, task, project, desc);
         });
-
-        connect(page, &TrackWorkSetupPage::addNewTaskRequested,
-                this, &UiFlowController::handleAddNewTask);
-
-        connect(page, &TrackWorkSetupPage::addNewProjectRequested,
-                this, &UiFlowController::handleAddNewProject);
 
         mPanel->setPage(page);
     }

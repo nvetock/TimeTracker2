@@ -32,13 +32,7 @@ namespace ui
             const QString& projectName,
             const QString& description);
 
-        // Called when user chooses "Add new task/project"
-        void addNewTaskRequested();
-        void addNewProjectRequested();
-
     private slots:
-        void handleTaskChanged(int index);
-        void handleProjectChanged(int index);
         void handleReady();
 
     private:

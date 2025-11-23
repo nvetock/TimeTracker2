@@ -38,12 +38,15 @@ namespace ui
         // Task combo
         mTaskCombo = new QComboBox(this);
         mTaskCombo->setObjectName("TaskCombo");
-        mTaskCombo->setEditable(false);
+        mTaskCombo->setEditable(true);
 
         // Project combo
         mProjectCombo = new QComboBox(this);
         mProjectCombo->setObjectName("ProjectCombo");
-        mProjectCombo->setEditable(false);
+        mProjectCombo->setEditable(true);
+
+        mTaskCombo->setInsertPolicy(QComboBox::NoInsert);
+        mProjectCombo->setInsertPolicy(QComboBox::NoInsert);
 
         // Description
         mDescriptionEdit = new QLineEdit(this);
@@ -85,12 +88,6 @@ namespace ui
         connect(mReadyBtn, &QPushButton::clicked, this, &TrackWorkSetupPage::handleReady);
         connect(mBackBtn, &QPushButton::clicked, this, &TrackWorkSetupPage::backRequested);
 
-        connect(mTaskCombo, qOverload<int>(&QComboBox::currentIndexChanged),
-            this, &TrackWorkSetupPage::handleTaskChanged);
-
-        connect(mProjectCombo, qOverload<int>(&QComboBox::currentIndexChanged),
-            this, &TrackWorkSetupPage::handleProjectChanged);
-
     }
 
     void TrackWorkSetupPage::setAvailableTasks(const QStringList& tasks)
@@ -110,28 +107,16 @@ namespace ui
 
     QString TrackWorkSetupPage::getSelectedTaskName() const
     {
-        if (!mTaskCombo) return {};
-
-        const int idx = mTaskCombo->currentIndex();
-        if (idx < 0) return {};
-
-        const auto kind = mTaskCombo->itemData(idx, RoleKind).toString();
-        if (kind == QStringLiteral("add-task")) return {};
-
-        return mTaskCombo->currentText().trimmed();
+        return mTaskCombo
+            ? mTaskCombo->currentText().trimmed()
+            : QString();
     }
 
     QString TrackWorkSetupPage::getSelectedProjectName() const
     {
-        if (!mProjectCombo) return {};
-
-        const int idx = mProjectCombo->currentIndex();
-        if (idx < 0) return {};
-
-        const auto kind = mProjectCombo->itemData(idx, RoleKind).toString();
-        if (kind == QStringLiteral("add-task")) return {};
-
-        return mProjectCombo->currentText().trimmed();
+        return mProjectCombo
+            ? mProjectCombo->currentText().trimmed()
+            : QString();
     }
 
     QString TrackWorkSetupPage::getDescription() const
@@ -143,6 +128,7 @@ namespace ui
 
     void TrackWorkSetupPage::rebuildTaskCombo(const QStringList& tasks)
     {
+        if (!mTaskCombo) return;
         mTaskCombo->clear();
 
         // Normal task entries
@@ -154,27 +140,35 @@ namespace ui
             mTaskCombo->addItem(trimmed);
 
             // default entried get empty kind
-            mTaskCombo->setItemData(mTaskCombo->count() - 1, QString(), RoleKind);
+            if (mTaskCombo->count() > 0)
+            {
+                mTaskCombo->setCurrentIndex(0);
+            }
+            else
+            {
+                mTaskCombo->setCurrentIndex(-1);
+            }
         }
 
-        // Special 'Add new..' task appended
-        const int addIdx = mTaskCombo->count();
-        mTaskCombo->addItem(tr("Add new task..."));
-        mTaskCombo->setItemData(addIdx, QStringLiteral("add-task"), RoleKind);
-
-        // Start with no selection
-        if (tasks.isEmpty())
-        {
-            mTaskCombo->setCurrentIndex(addIdx);
-        }
-        else
-        {
-            mTaskCombo->setCurrentIndex(0);
-        }
+        // // Special 'Add new..' task appended
+        // const int addIdx = mTaskCombo->count();
+        // mTaskCombo->addItem(tr("Add new task..."));
+        // mTaskCombo->setItemData(addIdx, QStringLiteral("add-task"), RoleKind);
+        //
+        // // Start with no selection
+        // if (tasks.isEmpty())
+        // {
+        //     mTaskCombo->setCurrentIndex(addIdx);
+        // }
+        // else
+        // {
+        //     mTaskCombo->setCurrentIndex(0);
+        // }
     }
 
     void TrackWorkSetupPage::rebuildProjectCombo(const QStringList& projects)
     {
+        if (!mProjectCombo) return;
         mProjectCombo->clear();
 
         // Normal task entries
@@ -184,60 +178,30 @@ namespace ui
             if (trimmed.isEmpty()) continue;
 
             mProjectCombo->addItem(trimmed);
-
-            // default entried get empty kind
-            mProjectCombo->setItemData(mProjectCombo->count() - 1, QString(), RoleKind);
         }
+        //
+        // // Special 'Add new..' task appended
+        // const int addIdx = mProjectCombo->count();
+        // mProjectCombo->addItem(tr("Add new project..."));
+        // mProjectCombo->setItemData(addIdx, QStringLiteral("add-project"), RoleKind);
 
-        // Special 'Add new..' task appended
-        const int addIdx = mProjectCombo->count();
-        mProjectCombo->addItem(tr("Add new project..."));
-        mProjectCombo->setItemData(addIdx, QStringLiteral("add-project"), RoleKind);
-
-        // Start with no selection
-        if (projects.isEmpty())
-        {
-            mProjectCombo->setCurrentIndex(addIdx);
-        }
-        else
+        if (mProjectCombo->count() > 0)
         {
             mProjectCombo->setCurrentIndex(0);
         }
-    }
-
-
-    void TrackWorkSetupPage::handleTaskChanged(int index)
-    {
-        if (!mTaskCombo || index < 0) return;
-
-        const auto kind = mTaskCombo->itemData(index, RoleKind).toString();
-        if (kind == QStringLiteral("add-task"))
+        else
         {
-            // Emit to allow controller to open dialog / settings view
-            // to handle this addition
-            emit addNewTaskRequested();
-        }
-    }
-
-    void TrackWorkSetupPage::handleProjectChanged(int index)
-    {
-        if (!mProjectCombo || index < 0) return;
-
-        const auto kind = mProjectCombo->itemData(index, RoleKind).toString();
-        if (kind == QStringLiteral("add-project"))
-        {
-            // Emit to allow controller to open dialog / settings view
-            // to handle this addition
-            emit addNewProjectRequested();
+            mProjectCombo->setCurrentIndex(-1);
         }
     }
 
     void TrackWorkSetupPage::handleReady()
     {
-        emit readyClicked(getDate(),
-            getSelectedTaskName(),
-            getSelectedProjectName(),
-            getDescription()
-        );
+        const QString date = getDate();
+        const QString task = getSelectedTaskName();
+        const QString project = getSelectedProjectName();
+        const QString desc = getDescription();
+
+        emit readyClicked(date, task, project, desc);
     }
 } // ui
