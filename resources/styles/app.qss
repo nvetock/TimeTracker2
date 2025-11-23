@@ -4,6 +4,16 @@ QFrame#MainCard {
     border-bottom-left-radius: 16px;
 }
 
+SideTab#SideTab[recording="false"],
+SideTab#SideTab[recording="0"] {
+    background-color: #00E099;
+}
+
+SideTab#SideTab[recording="true"],
+SideTab#SideTab[recording="1"] {
+    background-color: red;
+}
+
 QLabel#StatusLabel {
     color: #A0A4AA;
     font-family: "Barlow Semi Condensed", Arial, sans-serif;

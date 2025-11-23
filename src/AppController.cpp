@@ -137,11 +137,6 @@ namespace timetracker
         mSessionMgr->unpauseSession();
     }
 
-    bool AppController::getPauseStatus() const
-    {
-        return mSessionMgr->getPauseStatus();
-    }
-
     void AppController::userConfirmedStillWorking() const
     {
         if (!isValid()) return;

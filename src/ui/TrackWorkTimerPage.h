@@ -23,13 +23,23 @@ namespace ui
 
         QPushButton* getStartButton() const { return mStartBtn; }
         QPushButton* getReturnButton() const { return mReturnBtn; }
-
+        bool isPaused() const { return mIsPaused; }
     signals:
         void startClicked();
         void pauseClicked();
         void stopClicked();
         void returnClicked();
 
+    private slots:
+        void onStartButtonClicked();
+        void onPauseButtonClicked();
+        void onStopButtonClicked();
+        void onReturnButtonClicked();
+
+        void onUiTick();
+
+    private:
+        void updateTimerLabel();
     private:
         QLabel* mTimerLabel;
         QLabel* mDateLabel;
@@ -42,5 +52,7 @@ namespace ui
         QPushButton* mReturnBtn;
 
         QTimer* mUiTimer;
+        int mElapsedSeconds;
+        bool mIsPaused;
     };
 } // ui

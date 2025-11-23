@@ -5,6 +5,7 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 #include <QLineEdit>
+#include <QTimer>
 
 namespace ui
 {
@@ -20,6 +21,8 @@ namespace ui
         , mStopBtn{nullptr}
         , mReturnBtn{nullptr}
         , mUiTimer{nullptr}
+        , mElapsedSeconds{0}
+        , mIsPaused{false}
     {
         setTitle("NOT STARTED");
         showBackButton(false);
@@ -67,7 +70,7 @@ namespace ui
         mTaskLabel->setAlignment(Qt::AlignCenter);
         mTaskLabel->setWordWrap(true);
 
-        mDescription = new QLineEdit("default description.");
+        mDescription = new QLineEdit("default description.", this);
         mDescription->setObjectName("Description");
         mDescription->setAlignment(Qt::AlignCenter);
 
@@ -123,21 +126,104 @@ namespace ui
         btnGroup->setContentsMargins(0, 0, 0, 0);
         btnGroup->addWidget(mStartBtn, 0, Qt::AlignHCenter);
         btnGroup->addWidget(mReturnBtn, 0, Qt::AlignHCenter);
+        btnGroup->addWidget(mPauseBtn, 0, Qt::AlignHCenter);
+        btnGroup->addWidget(mStopBtn, 0, Qt::AlignHCenter);
 
         footer->addLayout(btnGroup);
 
+        // TIMER
+        mUiTimer = new QTimer(this);
+        mUiTimer->setInterval(1000);
+        connect(mUiTimer, &QTimer::timeout,
+            this, &TrackWorkTimerPage::onUiTick);
+
+
         // CONNECTIONS
         connect(mStartBtn, &QPushButton::clicked,
-                this, &TrackWorkTimerPage::startClicked);
+                this, &TrackWorkTimerPage::onStartButtonClicked);
 
         connect(mPauseBtn, &QPushButton::clicked,
-            this, &TrackWorkTimerPage::pauseClicked);
+            this, &TrackWorkTimerPage::onPauseButtonClicked);
 
         connect(mStopBtn, &QPushButton::clicked,
-            this, &TrackWorkTimerPage::stopClicked);
+            this, &TrackWorkTimerPage::onStopButtonClicked);
 
         connect(mReturnBtn, &QPushButton::clicked,
-                this, &TrackWorkTimerPage::returnClicked);
+                this, &TrackWorkTimerPage::onReturnButtonClicked);
+    }
+
+    void TrackWorkTimerPage::onStartButtonClicked()
+    {
+        mElapsedSeconds = 0;
+        mIsPaused = false;
+        updateTimerLabel();
+
+        setTitle("RUNNING");
+
+        mStartBtn->setVisible(false);
+        mReturnBtn->setVisible(false);
+        mPauseBtn->setVisible(true);
+        mStopBtn->setVisible(true);
+
+        setRecordingActive(true);
+
+        mUiTimer->start();
+
+        emit startClicked();
+    }
+
+    void TrackWorkTimerPage::onPauseButtonClicked()
+    {
+        if (!mIsPaused)
+        {
+            mIsPaused = true;
+            mUiTimer->stop();
+            setTitle("PAUSED");
+            mPauseBtn->setText("RESUME");
+            setRecordingActive(false);
+        }
+        else
+        {
+            mIsPaused = false;
+            mUiTimer->start();
+            setTitle("RUNNING");
+            mPauseBtn->setText("PAUSE");
+            setRecordingActive(true);
+        }
+
+        emit pauseClicked();
+    }
+
+    void TrackWorkTimerPage::onStopButtonClicked()
+    {
+        mUiTimer->stop();
+        mIsPaused = false;
+
+        setRecordingActive(false);
+        setTitle("COMPLETED");
+
+        mPauseBtn->setEnabled(false);
+        mStopBtn->setEnabled(false);
+
+        emit stopClicked();
+    }
+
+    void TrackWorkTimerPage::onReturnButtonClicked()
+    {
+        emit returnClicked();
+    }
+
+    void TrackWorkTimerPage::onUiTick()
+    {
+        ++mElapsedSeconds;
+        updateTimerLabel();
+    }
+
+    void TrackWorkTimerPage::updateTimerLabel()
+    {
+        const QTime t(0,0,0);
+        const QString text = t.addSecs(mElapsedSeconds).toString("hh:mm:ss");
+        setTimerText(text);
     }
 
     void TrackWorkTimerPage::setTimerText(const QString& text)

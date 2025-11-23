@@ -40,7 +40,7 @@ namespace timetracker
         mEndTime = endTime;
 
         mStatus = aborted
-         ? Status::Aborted
+         ? Status::Timeout
          : Status::Completed;
     }
 

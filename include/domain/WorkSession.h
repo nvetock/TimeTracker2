@@ -7,7 +7,7 @@ namespace timetracker
     class WorkSession
     {
     public:
-        enum class Status { NotStarted, Running, Paused, Completed, Aborted };
+        enum class Status { NotStarted, Running, Paused, Completed, Timeout };
 
         WorkSession();
         ~WorkSession() = default;
@@ -23,7 +23,6 @@ namespace timetracker
 
         void pause(const QTime& pauseTime = QTime::currentTime());
         void unpause(const QTime& unpauseTime = QTime::currentTime());
-        bool getPauseStatus() const { return mStatus == Status::Paused;}
 
         qint64 getTotalElapsedSeconds() const;
         qint64 getActiveSeconds() const;

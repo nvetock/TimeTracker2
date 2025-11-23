@@ -22,6 +22,8 @@ namespace ui
         explicit BaseCardPage(QWidget* parent = nullptr);
         ~BaseCardPage() = default;
 
+        void setRecordingActive(bool active);
+
         QVBoxLayout* getHeaderLayout() const { return mHeaderLayout; }
         QVBoxLayout* getBodyLayout() const { return mBodyLayout; }
         QVBoxLayout* getFooterLayout() const { return mFooterLayout; }

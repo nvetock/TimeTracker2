@@ -10,6 +10,7 @@
 
 #include <QGuiApplication>
 #include <QScreen>
+#include <qstyle.h>
 
 #include "GradientFrame.h"
 
@@ -36,7 +37,17 @@ namespace ui
         buildShell();
     }
 
- void BaseCardPage::buildShell()
+    void BaseCardPage::setRecordingActive(bool active)
+    {
+        if (!mSideTab) return;
+
+        mSideTab->setProperty("recording", active);
+        mSideTab->style()->unpolish(mSideTab);
+        mSideTab->style()->polish(mSideTab);
+        mSideTab->update();
+    }
+
+    void BaseCardPage::buildShell()
 {
     // ---- Root layout (holds [sidetab][maincard])
     mRootLayout = new QHBoxLayout{this};
