@@ -10,6 +10,8 @@
 #include <QCoreApplication>
 #include <QDebug>
 #include <QDate>
+#include <QDir>
+#include <QStandardPaths>
 
 #include "appservice/AppController.h"
 #include "appservice/SessionManager.h"
@@ -27,6 +29,45 @@ namespace ui
         , mSettingsRepo{this}
         , mSettings{mSettingsRepo.load()}
     {
+        QString baseDir = mSettings.saveDirectory;
+        if (baseDir.isEmpty())
+        {
+            baseDir = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+        }
+
+        QDir dir{baseDir};
+        const QString filePath = dir.filePath("session_log.json");
+
+        mLogRepo = new infra::SessionLogRepository(filePath, this);
+
+        if (mSessionManager && mLogRepo)
+        {
+            connect(mSessionManager, &timetracker::SessionManager::sessionStopped,
+                this, [this](const timetracker::WorkSession& session)
+                {
+                    using Status = timetracker::WorkSession::Status;
+                    const Status st = session.getStatus();
+
+                    if (st != Status::Completed && st != Status::Timeout) return;
+
+                    infra::SessionLogEntry e;
+                    e.userName = mSettings.userName;
+                    e.projectName = session.getProjectName();
+                    e.taskName = session.getTaskName();
+                    e.description = session.getTaskDescription();
+                    e.status = (st == Status::Completed) ? QStringLiteral("Completed") : QStringLiteral("Timeout");
+                    e.startTime = session.getStartTime();
+                    e.endTime = session.getEndTime();
+                    e.activeSeconds = session.getActiveSeconds();
+                    e.totalSeconds = session.getTotalElapsedSeconds();
+
+                    if (!mLogRepo->append(e))
+                    {
+                        qWarning() << "[UiFlowController] ctor()\n"
+                        << "  | Failed to append session log entry.";
+                    }
+                });
+        }
     }
 
     void UiFlowController::start()

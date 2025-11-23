@@ -2,6 +2,7 @@
 
 #include <QObject>
 #include "infra/AppSettingsRepository.h"
+#include "infra/SessionLogRepository.h"
 
 namespace timetracker
 {
@@ -48,5 +49,6 @@ namespace ui
         timetracker::SessionManager* mSessionManager;
         infra::AppSettingsRepository mSettingsRepo;
         infra::AppSettings           mSettings;
+        infra::SessionLogRepository* mLogRepo;
     };
 }

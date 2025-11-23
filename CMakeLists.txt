@@ -34,6 +34,8 @@ set(TIMETRACKER_SOURCES
         # infrastructure linking
         src/AppSettingsRepository.cpp
         include/infra/AppSettingsRepository.h
+        src/SessionLogRepository.cpp
+        include/infra/SessionLogRepository.h
 
         # idle detector linking
         include/idle/IdleDetectorFactory.h
