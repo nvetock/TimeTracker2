@@ -11,10 +11,126 @@
 #include <QDebug>
 #include <QDate>
 #include <QDir>
+#include <QFileDialog>
+#include <QJsonArray>
+#include <QJsonDocument>
+#include <QJsonObject>
 #include <QStandardPaths>
+#include <algorithm>
 
+#include "ExportPage.h"
 #include "appservice/AppController.h"
 #include "appservice/SessionManager.h"
+#include "infra/SessionLogRepository.h"
+
+namespace exporter
+{
+    QVector<infra::SessionLogEntry> filterLogs(const QVector<infra::SessionLogEntry>& all,
+                                               const QDate& fromDate, const QDate& toDate)
+    {
+        QVector<infra::SessionLogEntry> out;
+        out.reserve(all.size());
+
+        for (const auto& e : all)
+        {
+            const QDate d = QDate::fromString(e.date.toString(), Qt::ISODate);
+
+            if (!d.isValid()) continue;
+            if (d < fromDate || d > toDate) continue;
+
+            out.push_back(e);
+        }
+
+        // Order by date then startTime
+        std::sort(out.begin(), out.end(),
+            [](const infra::SessionLogEntry& a, const infra::SessionLogEntry& b)
+            {
+                const QDate da = QDate::fromString(a.date.toString(), Qt::ISODate);
+                const QDate db = QDate::fromString(b.date.toString(),Qt::ISODate);
+                if (da != db) return da < db;
+                return a.startTime < b.startTime;
+            });
+
+        return out;
+    }
+
+    void exportLogsToCsv(const QVector<infra::SessionLogEntry>& logs,
+                         const QString& filePath)
+    {
+        QFile f(filePath);
+        if (!f.open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text))
+        {
+            qWarning() << "[Export] Failed to open CSV file for write:" << filePath;
+            return;
+        }
+
+        QTextStream out(&f);
+        out.setEncoding(QStringConverter::Utf8);
+
+        out << "userName,projectName,taskName,description,status,"
+            << "date,startTime,endTime,activeSeconds,totalSeconds\n";
+
+        auto csvEscape = [](const QString& s) -> QString
+        {
+            QString v = s;
+            v.replace('"', "\"\"");
+            return '"' + v + '"';
+        };
+
+        for (const auto& e : logs)
+        {
+            out << csvEscape(e.userName)      << ','
+                << csvEscape(e.projectName)   << ','
+                << csvEscape(e.taskName)      << ','
+                << csvEscape(e.description)   << ','
+                << csvEscape(e.status)        << ','
+                << csvEscape(e.date.toString())          << ','
+                << csvEscape(e.startTime.toString())     << ','
+                << csvEscape(e.endTime.toString())       << ','
+                << e.activeSeconds            << ','
+                << e.totalSeconds             << '\n';
+        }
+    }
+
+    void exportLogsToJson(const QVector<infra::SessionLogEntry>& logs,
+                          const QString& filePath)
+    {
+        QJsonArray arr;
+
+        for (const auto& e : logs)
+        {
+            QJsonObject obj;
+            obj["userName"]      = e.userName;
+            obj["projectName"]   = e.projectName;
+            obj["taskName"]      = e.taskName;
+            obj["description"]   = e.description;
+            obj["status"]        = e.status;
+            obj["date"]          = e.date.toString();
+            obj["startTime"]     = e.startTime.toString();
+            obj["endTime"]       = e.endTime.toString();
+            obj["activeSeconds"] = e.activeSeconds;
+            obj["totalSeconds"]  = e.totalSeconds;
+            arr.append(obj);
+        }
+
+        QJsonObject root;
+        root["version"] = 1;
+        root["entries"] = arr;
+
+        QFile f(filePath);
+        if (!f.open(QIODevice::WriteOnly | QIODevice::Truncate))
+        {
+            qWarning() << "[Export] Failed to open JSON file for write:" << filePath;
+            return;
+        }
+
+        QJsonDocument doc(root);
+        f.write(doc.toJson(QJsonDocument::Indented));
+        f.close();
+    }
+
+}
+
 
 namespace ui
 {
@@ -23,11 +139,11 @@ namespace ui
                                        timetracker::SessionManager* sMgr,
                                        QObject* parent)
         : QObject{parent}
-        , mPanel{panel}
-        , mAppController{appCtrl}
-        , mSessionManager{sMgr}
-        , mSettingsRepo{this}
-        , mSettings{mSettingsRepo.load()}
+          , mPanel{panel}
+          , mAppController{appCtrl}
+          , mSessionManager{sMgr}
+          , mSettingsRepo{this}
+          , mSettings{mSettingsRepo.load()}
     {
         QString baseDir = mSettings.saveDirectory;
         if (baseDir.isEmpty())
@@ -40,33 +156,34 @@ namespace ui
 
         mLogRepo = new infra::SessionLogRepository(filePath, this);
 
+        // ToDo: Move this logic out of the UiFlowController
         if (mSessionManager && mLogRepo)
         {
             connect(mSessionManager, &timetracker::SessionManager::sessionStopped,
-                this, [this](const timetracker::WorkSession& session)
-                {
-                    using Status = timetracker::WorkSession::Status;
-                    const Status st = session.getStatus();
-
-                    if (st != Status::Completed && st != Status::Timeout) return;
-
-                    infra::SessionLogEntry e;
-                    e.userName = mSettings.userName;
-                    e.projectName = session.getProjectName();
-                    e.taskName = session.getTaskName();
-                    e.description = session.getTaskDescription();
-                    e.status = (st == Status::Completed) ? QStringLiteral("Completed") : QStringLiteral("Timeout");
-                    e.startTime = session.getStartTime();
-                    e.endTime = session.getEndTime();
-                    e.activeSeconds = session.getActiveSeconds();
-                    e.totalSeconds = session.getTotalElapsedSeconds();
-
-                    if (!mLogRepo->append(e))
+                    this, [this](const timetracker::WorkSession& session)
                     {
-                        qWarning() << "[UiFlowController] ctor()\n"
-                        << "  | Failed to append session log entry.";
-                    }
-                });
+                        using Status = timetracker::WorkSession::Status;
+                        const Status st = session.getStatus();
+
+                        if (st != Status::Completed && st != Status::Timeout) return;
+
+                        infra::SessionLogEntry e;
+                        e.userName = mSettings.userName;
+                        e.projectName = session.getProjectName();
+                        e.taskName = session.getTaskName();
+                        e.description = session.getTaskDescription();
+                        e.status = (st == Status::Completed) ? QStringLiteral("Completed") : QStringLiteral("Timeout");
+                        e.startTime = session.getStartTime();
+                        e.endTime = session.getEndTime();
+                        e.activeSeconds = session.getActiveSeconds();
+                        e.totalSeconds = session.getTotalElapsedSeconds();
+
+                        if (!mLogRepo->append(e))
+                        {
+                            qWarning() << "[UiFlowController] ctor()\n"
+                                << "  | Failed to append session log entry.";
+                        }
+                    });
         }
     }
 
@@ -86,7 +203,7 @@ namespace ui
                 this, &UiFlowController::showLogHistory);
 
         connect(page, &MainMenuPage::exportRequested,
-                this, &UiFlowController::showLogHistory); // placeholder for export
+                this, &UiFlowController::showExport); // placeholder for export
 
         connect(page, &MainMenuPage::settingsRequested,
                 this, &UiFlowController::showSettings);
@@ -113,30 +230,30 @@ namespace ui
                              const QString& task,
                              const QString& project,
                              const QString& desc)
-        {
-            // Here you could also talk to AppController to start a session
-            QString t = task.trimmed();
-            QString p = project.trimmed();
+                {
+                    // Here you could also talk to AppController to start a session
+                    QString t = task.trimmed();
+                    QString p = project.trimmed();
 
-            if (!task.isEmpty() && !mSettings.tasks.contains(t, Qt::CaseInsensitive))
-            {
-                mSettings.tasks.append(t);
-            }
+                    if (!task.isEmpty() && !mSettings.tasks.contains(t, Qt::CaseInsensitive))
+                    {
+                        mSettings.tasks.append(t);
+                    }
 
-            if (!project.isEmpty() && !mSettings.projects.contains(p, Qt::CaseInsensitive))
-            {
-                mSettings.projects.append(p);
-            }
+                    if (!project.isEmpty() && !mSettings.projects.contains(p, Qt::CaseInsensitive))
+                    {
+                        mSettings.projects.append(p);
+                    }
 
-            if (!mSettingsRepo.save(mSettings))
-            {
-                qWarning() << "[UIFlowController} showTrackWorkSetup()\n"
-                           << "  | Settings did not save to mSettingsRepo.";
-            }
+                    if (!mSettingsRepo.save(mSettings))
+                    {
+                        qWarning() << "[UIFlowController} showTrackWorkSetup()\n"
+                            << "  | Settings did not save to mSettingsRepo.";
+                    }
 
 
-            showTrackWorkTimer(date, t, p, desc);
-        });
+                    showTrackWorkTimer(date, t, p, desc);
+                });
 
         mPanel->setPage(page);
     }
@@ -159,39 +276,39 @@ namespace ui
                 this, &UiFlowController::showTrackWorkSetup);
 
         connect(page, &TrackWorkTimerPage::startClicked,
-            this, [this, task, project, description]()
-            {
-                if (!mAppController) return;
+                this, [this, task, project, description]()
+                {
+                    if (!mAppController) return;
 
-                // Grab username from settings
-                const QString userName = mSettings.userName.isEmpty()
-                ? QStringLiteral("User")
-                : mSettings.userName;
+                    // Grab username from settings
+                    const QString userName = mSettings.userName.isEmpty()
+                                                 ? QStringLiteral("User")
+                                                 : mSettings.userName;
 
-                mAppController->startSessionForTask( userName, project, task, description);
-            });
+                    mAppController->startSessionForTask(userName, project, task, description);
+                });
 
         connect(page, &TrackWorkTimerPage::pauseClicked,
-            this, [this, page]()
-            {
-                if (!mAppController) return;
-
-                if (page->isPaused())
-                    mAppController->unpauseCurrentSession();
-                    // ToDo: Change button text here. & below
-                else
+                this, [this, page]()
                 {
-                    mAppController->pauseCurrentSession();
-                }
-            });
+                    if (!mAppController) return;
+
+                    if (page->isPaused())
+                        mAppController->unpauseCurrentSession();
+                    // ToDo: Change button text here. & below
+                    else
+                    {
+                        mAppController->pauseCurrentSession();
+                    }
+                });
 
         connect(page, &TrackWorkTimerPage::stopClicked,
-            this, [this]()
-            {
-                if (!mAppController) return;
+                this, [this]()
+                {
+                    if (!mAppController) return;
 
-                mAppController->stopCurrentSession();
-            });
+                    mAppController->stopCurrentSession();
+                });
 
         // Connect Session Status' to UI text
         if (mSessionManager)
@@ -247,31 +364,104 @@ namespace ui
 
         connect(page, &SettingsPage::settingsSaved,
                 this, [this](const infra::AppSettings& updated)
-        {
-            // Merge: only overwrite fields changed in SettingsPage
-            mSettings.userName      = updated.userName;
-            if (!updated.saveDirectory.isEmpty())
-                mSettings.saveDirectory = updated.saveDirectory;
+                {
+                    // Merge: only overwrite fields changed in SettingsPage
+                    mSettings.userName = updated.userName;
+                    if (!updated.saveDirectory.isEmpty())
+                        mSettings.saveDirectory = updated.saveDirectory;
 
-            mSettingsRepo.save(mSettings);
-            showMainMenu();
-        });
+                    mSettingsRepo.save(mSettings);
+                    showMainMenu();
+                });
 
         connect(page, &SettingsPage::resetTasksRequested,
                 this, [this]()
-        {
-            mSettings.tasks.clear();
-            mSettingsRepo.save(mSettings);
-        });
+                {
+                    mSettings.tasks.clear();
+                    mSettingsRepo.save(mSettings);
+                });
 
         connect(page, &SettingsPage::resetProjectsRequested,
                 this, [this]()
-        {
-            mSettings.projects.clear();
-            mSettingsRepo.save(mSettings);
-        });
+                {
+                    mSettings.projects.clear();
+                    mSettingsRepo.save(mSettings);
+                });
 
         mPanel->setPage(page);
     }
 
+    void UiFlowController::showExport()
+    {
+        auto* page = new ExportPage(mPanel);
+        page->setTitle("EXPORT");
+
+        connect(page, &ExportPage::backRequested,
+                this, &UiFlowController::showMainMenu);
+
+        connect(page, &ExportPage::exportRequested,
+                this, [this](const QString& format,
+                             const QDate& from,
+                             const QDate& to)
+                {
+                    // 1) load logs
+                    const auto all = mLogRepo->loadAll();
+
+                    QVector<infra::SessionLogEntry> filtered;
+
+                    // "all" mode: from & to are invalid (QDate()), just use all
+                    if (!from.isValid() || !to.isValid())
+                    {
+                        filtered = all;
+                    }
+                    else
+                    {
+                        filtered = exporter::filterLogs(all, from, to);
+                    }
+
+                    if (filtered.isEmpty())
+                    {
+                        qWarning() << "[UiFlowController] No logs to export for chosen range.";
+                        return;
+                    }
+
+                    // 2) pick save location
+                    const QString defaultDir =
+                        mSettings.saveDirectory.isEmpty()
+                            ? QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation)
+                            : mSettings.saveDirectory;
+
+                    QString filterStr;
+                    if (format == "csv")
+                        filterStr = "CSV Files (*.csv)";
+                    else
+                        filterStr = "JSON Files (*.json)";
+
+                    const QString suggestedName =
+                        (format == "csv")
+                            ? QStringLiteral("timelog_export.csv")
+                            : QStringLiteral("timelog_export.json");
+
+                    const QString filePath =
+                        QFileDialog::getSaveFileName(mPanel,
+                                                     "Export time logs",
+                                                     QDir(defaultDir).filePath(suggestedName),
+                                                     filterStr);
+
+                    if (filePath.isEmpty())
+                        return;
+
+                    // 3) write file
+                    if (format == "csv")
+                    {
+                        exporter::exportLogsToCsv(filtered, filePath);
+                    }
+                    else
+                    {
+                        exporter::exportLogsToJson(filtered, filePath);
+                    }
+                });
+
+        mPanel->setPage(page);
+    }
 }

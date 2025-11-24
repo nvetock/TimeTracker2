@@ -32,6 +32,7 @@ namespace ui
 
         void start(); // show main menu
 
+
     private:
         // Navigation helpers
         void showMainMenu();
@@ -42,6 +43,13 @@ namespace ui
                                 const QString& description);
         void showLogHistory();
         void showSettings();
+        void showExport();
+
+        static void exportLogsToCsv(const QVector<infra::SessionLogEntry>& logs,
+                                    const QString& filePath);
+
+        static void exportLogsToJson(const QVector<infra::SessionLogEntry>& logs,
+                                     const QString& filePath);
 
     private:
         TimeTrackerPanel*            mPanel;

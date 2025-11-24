@@ -34,6 +34,10 @@ namespace infra
         // Load all entries
         QVector<SessionLogEntry> loadAll() const;
 
+        QVector<SessionLogEntry> filterLogs(const QVector<SessionLogEntry>& all,
+                                            const QDate& fromDate,
+                                            const QDate& toDate);
+
         QString filePath() const { return mFilePath; }
 
     private:

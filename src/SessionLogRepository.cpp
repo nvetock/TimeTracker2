@@ -7,6 +7,8 @@
 #include <QJsonArray>
 #include <QStandardPaths>
 #include <QDebug>
+#include <QDate>
+#include <algorithm>
 
 namespace infra
 {
@@ -165,4 +167,6 @@ namespace infra
 
         return out;
     }
+
+
 } // infra
