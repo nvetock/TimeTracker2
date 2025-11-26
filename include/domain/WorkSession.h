@@ -1,5 +1,7 @@
 #pragma once
-#include <qdatetime.h>
+#include <QString>
+#include <QTime>
+#include <QDate>
 #include <string>
 
 namespace timetracker
@@ -72,7 +74,7 @@ namespace timetracker
             return mTaskDesc;
         }
 
-        [[nodiscard]] const QDate& m_creation_date() const
+        [[nodiscard]] const QDate& getCreationDate() const
         {
             return mCreationDate;
         }

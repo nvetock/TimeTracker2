@@ -39,7 +39,7 @@ namespace infra
             entry.taskName = obj.value("taskName").toString();
             entry.description = obj.value("description").toString();
             entry.status = obj.value("status").toString();
-            entry.date = QDate::fromString(obj.value("date").toString());
+            entry.date = QDate::fromString(obj.value("date").toString(), "yyyy-MM-dd");
             entry.startTime = QTime::fromString(obj.value("startTime").toString());
             entry.endTime = QTime::fromString(obj.value("endTime").toString());
             entry.activeSeconds = obj.value("activeSeconds").toInt();

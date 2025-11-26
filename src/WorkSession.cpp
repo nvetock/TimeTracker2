@@ -29,6 +29,7 @@ namespace timetracker
         mTaskName = taskName;
         mTaskDesc = taskDescription;
         mStartTime = startTime;
+        mCreationDate = QDate::currentDate();
 
         mStatus = Status::Running;
     }

@@ -28,12 +28,14 @@ namespace exporter
     QVector<infra::SessionLogEntry> filterLogs(const QVector<infra::SessionLogEntry>& all,
                                                const QDate& fromDate, const QDate& toDate)
     {
+        if (!fromDate.isValid() || !toDate.isValid() || fromDate > toDate) return all;
+
         QVector<infra::SessionLogEntry> out;
         out.reserve(all.size());
 
         for (const auto& e : all)
         {
-            const QDate d = QDate::fromString(e.date.toString(), Qt::ISODate);
+            const QDate d = e.date;
 
             if (!d.isValid()) continue;
             if (d < fromDate || d > toDate) continue;
@@ -45,8 +47,8 @@ namespace exporter
         std::sort(out.begin(), out.end(),
             [](const infra::SessionLogEntry& a, const infra::SessionLogEntry& b)
             {
-                const QDate da = QDate::fromString(a.date.toString(), Qt::ISODate);
-                const QDate db = QDate::fromString(b.date.toString(),Qt::ISODate);
+                const QDate da = a.date;
+                const QDate db = b.date;
                 if (da != db) return da < db;
                 return a.startTime < b.startTime;
             });
@@ -173,6 +175,7 @@ namespace ui
                         e.taskName = session.getTaskName();
                         e.description = session.getTaskDescription();
                         e.status = (st == Status::Completed) ? QStringLiteral("Completed") : QStringLiteral("Timeout");
+                        e.date = session.getCreationDate();
                         e.startTime = session.getStartTime();
                         e.endTime = session.getEndTime();
                         e.activeSeconds = session.getActiveSeconds();

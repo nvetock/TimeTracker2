@@ -4,6 +4,7 @@
 #include <QString>
 #include <QVector>
 #include <QTime>
+#include <QDate>
 
 namespace infra
 {
