@@ -9,6 +9,7 @@
 #include <QVBoxLayout>
 #include <QCursor>
 #include <QLabel>
+#include "ClickableSvgWidget.h"
 
 namespace ui
 {
@@ -36,16 +37,51 @@ namespace ui
         mDate->setObjectName("Date");
 
         // Task combo
-        mTaskCombo = new QComboBox(this);
+        auto* taskRow = new QWidget(this);
+        auto* taskLayout = new QHBoxLayout(taskRow);
+        taskLayout->setContentsMargins(0,0,0,0);
+        taskLayout->setSpacing(8);
+        mTaskCombo = new QComboBox(taskRow);
         mTaskCombo->setObjectName("TaskCombo");
         mTaskCombo->setEditable(true);
         mTaskCombo->lineEdit()->setPlaceholderText("Select or type task…");
+        mTaskCombo->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+
+        auto* taskArrow = new ClickableSvgWidget(":/icons/resources/icons/arrow_down.svg", taskRow);
+        taskArrow->setObjectName("ComboArrowIcon");
+        taskArrow->setFixedSize(16,16);
+        taskArrow->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+
+        taskLayout->addWidget(mTaskCombo);
+        taskLayout->addWidget(taskArrow);
+
+        connect(taskArrow, &ClickableSvgWidget::clicked,
+                mTaskCombo, &QComboBox::showPopup);
+
 
         // Project combo
-        mProjectCombo = new QComboBox(this);
+        auto* projRow = new QWidget(this);
+        auto* projLayout = new QHBoxLayout(projRow);
+        projLayout->setContentsMargins(0,0,0,0);
+        projLayout->setSpacing(8);
+        mProjectCombo = new QComboBox(projRow);
         mProjectCombo->setObjectName("ProjectCombo");
         mProjectCombo->setEditable(true);
         mProjectCombo->lineEdit()->setPlaceholderText("Select or type project…");
+        mProjectCombo->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+
+        auto* projArrow = new ClickableSvgWidget(":/icons/resources/icons/arrow_down.svg", projRow);
+        projArrow->raise();
+        qDebug() << "arrow is null:" << projArrow;
+        projArrow->setObjectName("ComboArrowIcon");
+        projArrow->setFixedSize(16,16);
+        projArrow->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+
+        projLayout->addWidget(mProjectCombo);
+        projLayout->addWidget(projArrow);
+
+        connect(projArrow, &ClickableSvgWidget::clicked,
+                mProjectCombo, &QComboBox::showPopup);
 
         mTaskCombo->setInsertPolicy(QComboBox::NoInsert);
         mProjectCombo->setInsertPolicy(QComboBox::NoInsert);
@@ -58,8 +94,8 @@ namespace ui
 
         // Labels on the left, widgets on the right
         formLayout->addRow(tr("DATE"), mDate);
-        formLayout->addRow(tr("TASK"), mTaskCombo);
-        formLayout->addRow(tr("PROJECT"), mProjectCombo);
+        formLayout->addRow(tr("TASK"), taskRow);
+        formLayout->addRow(tr("PROJECT"), projRow);
         formLayout->addRow(QString(), mDescriptionEdit);
 
         body->addLayout(formLayout);

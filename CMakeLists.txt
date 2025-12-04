@@ -72,6 +72,7 @@ set(TIMETRACKER_SOURCES
         src/ui/UiFlowController.cpp
         src/ui/MainMenuPage.cpp
         src/ui/InlineEditableLabel.cpp
+        src/ui/ClickableSvgWidget.h
 
 )
 

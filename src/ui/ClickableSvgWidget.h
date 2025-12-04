@@ -1,6 +1,6 @@
 #pragma once
 #include <QSvgWidget>
-
+#include <QMouseEvent>
 namespace ui
 {
     class ClickableSvgWidget : public QSvgWidget

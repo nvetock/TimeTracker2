@@ -79,6 +79,10 @@ QComboBox#ProjectCombo QLineEdit {
     selection-color: #262626;
 }
 
+QSvgWidget#ComboArrowIcon {
+    background: transparent;
+}
+
 /* Drop-down: remove OS theming */
 QComboBox#TaskCombo::drop-down,
 QComboBox#ProjectCombo::drop-down {
@@ -92,10 +96,8 @@ QComboBox#ProjectCombo::drop-down {
 /* Modern arrow using Qt's built-in arrow icon */
 QComboBox#TaskCombo::down-arrow,
 QComboBox#ProjectCombo::down-arrow {
-    width: 10px;
-    height: 10px;
-    image: url(":/icons/resources/icons/arrow_down.svg");
-    background-color: #FFFFFF;
+    width: 0px;
+    border: none;
 }
 
 /* Popup list */
@@ -110,7 +112,6 @@ QComboBox#TaskCombo QAbstractItemView::item,
 QComboBox#ProjectCombo QAbstractItemView::item {
     padding: 6px 8px;
 }
-
 
 /*
  *
@@ -201,7 +202,7 @@ QLineEdit#InlineLineEdit {
 
 /* Focus ring for the edit field */
 QLineEdit#InlineLineEdit:focus {
-    border-color: #00E099;
+    border: 2px solid #00E099;
 }
 
 /* Pencil icon – keep it visually subtle */
