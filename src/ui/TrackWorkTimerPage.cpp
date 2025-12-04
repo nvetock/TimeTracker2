@@ -70,9 +70,8 @@ namespace ui
         mTaskLabel->setAlignment(Qt::AlignCenter);
         mTaskLabel->setWordWrap(true);
 
-        mDescription = new QLineEdit("default description.", this);
-        mDescription->setObjectName("Description");
-        mDescription->setAlignment(Qt::AlignCenter);
+        mDescription = new InlineEditableLabel(this);
+        mDescription->setObjectName("DescriptionLabel");
 
         auto* tdpttGroup = new QVBoxLayout();
         tdpttGroup->setSpacing(24);
@@ -128,8 +127,8 @@ namespace ui
         btnGroup->addWidget(mReturnBtn, 0, Qt::AlignHCenter);
         btnGroup->addWidget(mPauseBtn, 0, Qt::AlignHCenter);
         btnGroup->addWidget(mStopBtn, 0, Qt::AlignHCenter);
-
         footer->addLayout(btnGroup);
+        footer->addSpacing(32);
 
         // TIMER
         mUiTimer = new QTimer(this);

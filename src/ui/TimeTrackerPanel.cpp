@@ -20,6 +20,7 @@ namespace ui
         , mClosedGeometry{QRect{}}
         , mAnimation{nullptr}
         , mCurrentPage{nullptr}
+        , mSideTab{nullptr}
     {
         // Window flags: frameless + tool + stays on top
         setWindowFlags(Qt::FramelessWindowHint
@@ -63,10 +64,10 @@ namespace ui
         }
 
         // Connect the SideTab clicking to open/close the panel
-        const SideTab* tab = getPage()->getSideTab();
-        if (tab)  // If null ignore connection, otherwise establish.
+        mSideTab = getPage()->getSideTab();
+        if (mSideTab)  // If null ignore connection, otherwise establish.
         {
-            connect(tab, &SideTab::clicked,
+            connect(mSideTab, &SideTab::clicked,
                 this, [this]()
                 {
                     setOpen(!mOpen);

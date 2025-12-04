@@ -1,6 +1,7 @@
 #pragma once
 
 #include "BaseCardPage.h"
+#include "InlineEditableLabel.h"
 
 class QDateEdit;
 class QComboBox;
@@ -42,7 +43,7 @@ namespace ui
         QLabel* mDate;
         QComboBox* mTaskCombo;
         QComboBox* mProjectCombo;
-        QLineEdit* mDescriptionEdit;
+        InlineEditableLabel* mDescriptionEdit;
         QPushButton* mReadyBtn;
         QPushButton* mBackBtn;
 

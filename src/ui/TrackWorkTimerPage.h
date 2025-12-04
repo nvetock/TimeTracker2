@@ -1,6 +1,7 @@
 #pragma once
 
 #include "BaseCardPage.h"
+#include "InlineEditableLabel.h"
 #include "domain/WorkSession.h"
 
 class QLineEdit;
@@ -48,7 +49,8 @@ namespace ui
         QLabel* mDateLabel;
         QLabel* mProjectLabel;
         QLabel* mTaskLabel;
-        QLineEdit* mDescription;
+        InlineEditableLabel* mDescription;
+        //QLineEdit* mDescription;
         QPushButton* mStartBtn;
         QPushButton* mPauseBtn;
         QPushButton* mStopBtn;

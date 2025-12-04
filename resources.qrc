@@ -8,4 +8,8 @@
     <qresource prefix="/styles">
         <file>resources/styles/app.qss</file>
     </qresource>
+    <qresource prefix="/icons">
+        <file>resources/icons/pencil.svg</file>
+        <file>resources/icons/arrow_down.svg</file>
+    </qresource>
 </RCC>

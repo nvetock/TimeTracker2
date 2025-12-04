@@ -7,6 +7,7 @@
 
 namespace ui
 {
+    class SideTab;
     class BaseCardPage;
 
     class TimeTrackerPanel : public QWidget
@@ -40,5 +41,6 @@ namespace ui
         QPropertyAnimation* mAnimation;
 
         BaseCardPage* mCurrentPage;
+        SideTab* mSideTab;
     };
 } // ui

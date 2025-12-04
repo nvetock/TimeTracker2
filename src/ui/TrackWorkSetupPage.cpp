@@ -29,7 +29,7 @@ namespace ui
 
         auto* formLayout = new QFormLayout();
         formLayout->setContentsMargins(0,0,0,0);
-        formLayout->setSpacing(0);
+        formLayout->setSpacing(24);
 
         // Date
         mDate = new QLabel(QDate::currentDate().toString(), this);
@@ -39,19 +39,22 @@ namespace ui
         mTaskCombo = new QComboBox(this);
         mTaskCombo->setObjectName("TaskCombo");
         mTaskCombo->setEditable(true);
+        mTaskCombo->lineEdit()->setPlaceholderText("Select or type task…");
 
         // Project combo
         mProjectCombo = new QComboBox(this);
         mProjectCombo->setObjectName("ProjectCombo");
         mProjectCombo->setEditable(true);
+        mProjectCombo->lineEdit()->setPlaceholderText("Select or type project…");
 
         mTaskCombo->setInsertPolicy(QComboBox::NoInsert);
         mProjectCombo->setInsertPolicy(QComboBox::NoInsert);
 
         // Description
-        mDescriptionEdit = new QLineEdit(this);
+        mDescriptionEdit = new InlineEditableLabel(this);
         mDescriptionEdit->setObjectName("DescriptionEdit");
-        mDescriptionEdit->setPlaceholderText("Work description (optional)");
+        mDescriptionEdit->setText("Set a work description...");
+
 
         // Labels on the left, widgets on the right
         formLayout->addRow(tr("DATE"), mDate);
@@ -79,11 +82,12 @@ namespace ui
 
         auto* buttonGroup = new QVBoxLayout();
         buttonGroup->setContentsMargins(0,0,0,0);
-        buttonGroup->setSpacing(8);
+        buttonGroup->setSpacing(12);
         buttonGroup->addWidget(mReadyBtn, 0, Qt::AlignHCenter);
         buttonGroup->addWidget(mBackBtn, 0, Qt::AlignHCenter);
 
         footer->addLayout(buttonGroup);
+        footer->addSpacing(32);
 
         // -- Connections
         connect(mReadyBtn, &QPushButton::clicked, this, &TrackWorkSetupPage::handleReady);
@@ -123,7 +127,7 @@ namespace ui
     QString TrackWorkSetupPage::getDescription() const
     {
         return mDescriptionEdit
-            ? mDescriptionEdit->text().trimmed()
+            ? mDescriptionEdit->getText().trimmed()
             : QString();
     }
 

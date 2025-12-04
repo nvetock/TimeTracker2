@@ -21,6 +21,8 @@ find_package(Qt6 REQUIRED COMPONENTS
         Core
         Gui
         Widgets
+        Svg
+        SvgWidgets
 )
 
 # ---- Sources ----
@@ -69,6 +71,7 @@ set(TIMETRACKER_SOURCES
         src/ui/UiFlowController.h
         src/ui/UiFlowController.cpp
         src/ui/MainMenuPage.cpp
+        src/ui/InlineEditableLabel.cpp
 
 )
 
@@ -101,6 +104,8 @@ target_link_libraries(${PROJECT_NAME}
         Qt6::Core
         Qt6::Gui
         Qt6::Widgets
+        Qt6::Svg
+        Qt6::SvgWidgets
 )
 
 # ---- Include dirs (optional if you keep everything in src/) ----
@@ -111,10 +116,8 @@ target_include_directories(${PROJECT_NAME}
 )
 
 # ---- Platform-specific deployment helpers ----
-# Note: deployment (copying Qt DLLs / frameworks next to the app)
-# is usually handled by Qt's windeployqt / macdeployqt tools after build.
-# The block below is a simple Windows helper that copies the main Qt DLLs
-# into the build folder so the EXE runs from the build tree.
+# NOTE: This is a simple dev-time helper so the app runs from the build tree.
+# For real deployment, use windeployqt / macdeployqt.
 
 if (WIN32 AND NOT DEFINED CMAKE_TOOLCHAIN_FILE)
     set(DEBUG_SUFFIX "")
@@ -142,8 +145,20 @@ if (WIN32 AND NOT DEFINED CMAKE_TOOLCHAIN_FILE)
         )
     endif ()
 
+    # Copy image format plugin for SVG (qsvg) – nice to have
+    if (EXISTS "${QT_INSTALL_PATH}/plugins/imageformats/qsvg${DEBUG_SUFFIX}.dll")
+        add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+                COMMAND ${CMAKE_COMMAND} -E make_directory
+                "$<TARGET_FILE_DIR:${PROJECT_NAME}>/plugins/imageformats/"
+                COMMAND ${CMAKE_COMMAND} -E copy
+                "${QT_INSTALL_PATH}/plugins/imageformats/qsvg${DEBUG_SUFFIX}.dll"
+                "$<TARGET_FILE_DIR:${PROJECT_NAME}>/plugins/imageformats/"
+        )
+    endif ()
+
     # Copy core Qt DLLs this app depends on
-    foreach(QT_LIB Core Gui Widgets)
+    # 👇 Added Svg and SvgWidgets here
+    foreach(QT_LIB Core Gui Widgets Svg SvgWidgets)
         if (EXISTS "${QT_INSTALL_PATH}/bin/Qt6${QT_LIB}${DEBUG_SUFFIX}.dll")
             add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
                     COMMAND ${CMAKE_COMMAND} -E copy
@@ -152,4 +167,30 @@ if (WIN32 AND NOT DEFINED CMAKE_TOOLCHAIN_FILE)
             )
         endif ()
     endforeach()
+endif ()
+
+if (APPLE AND NOT DEFINED CMAKE_TOOLCHAIN_FILE)
+    # Try to infer Qt install path from CMAKE_PREFIX_PATH
+    set(QT_INSTALL_PATH "${CMAKE_PREFIX_PATH}")
+    if (NOT EXISTS "${QT_INSTALL_PATH}/bin")
+        set(QT_INSTALL_PATH "${QT_INSTALL_PATH}/..")
+        if (NOT EXISTS "${QT_INSTALL_PATH}/bin")
+            set(QT_INSTALL_PATH "${QT_INSTALL_PATH}/..")
+        endif ()
+    endif ()
+
+    set(MACDEPLOYQT_EXECUTABLE "${QT_INSTALL_PATH}/bin/macdeployqt")
+
+    if (EXISTS "${MACDEPLOYQT_EXECUTABLE}")
+        # For Qt 6, CMake usually builds a bundle (.app) for a Widgets app.
+        # This runs macdeployqt on the bundle after build.
+        add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+                COMMAND "${MACDEPLOYQT_EXECUTABLE}"
+                "$<TARGET_BUNDLE_DIR:${PROJECT_NAME}>"
+                -verbose=1
+                VERBATIM
+        )
+    else ()
+        message(WARNING "macdeployqt not found at: ${MACDEPLOYQT_EXECUTABLE}")
+    endif ()
 endif ()
