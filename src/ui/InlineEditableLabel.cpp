@@ -36,6 +36,9 @@ namespace ui
         mAnim->setDuration(150);
         mAnim->setEasingCurve(QEasingCurve::OutCubic);
 
+        connect(mAnim, &QPropertyAnimation::finished,
+            this, &InlineEditableLabel::handleAnimFinished);
+
         // Description label
         mLabel = new QLabel("Add description...", this);
         mLabel->setObjectName("InlineEditLabel");
@@ -48,10 +51,10 @@ namespace ui
         mLineEdit->setObjectName("InlineLineEdit");
         mLineEdit->setPlaceholderText("Add description...");
         mLineEdit->hide();
-        mLineEdit->setBaseSize(QSize(500, 72));
+        //mLineEdit->setBaseSize(QSize(500, 72));
         mLineEdit->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
 
-        // Add to layout in VERTICAL order
+        // Add to layout in Horizontal order
         layout->addWidget(mLabel,     0);
         layout->addWidget(mLineEdit,  0);
         layout->addWidget(mEditIcon, 0);
@@ -172,13 +175,13 @@ namespace ui
 
         mAnim->setStartValue(mIconEffect->opacity());
         mAnim->setEndValue(targetOpacity);
-
-        connect(mAnim, &QPropertyAnimation::finished,
-            this, [this, targetOpacity]()
-            {
-                if (targetOpacity == 0.0) mEditIcon->hide();
-            }, Qt::UniqueConnection);
-
         mAnim->start();
+    }
+
+    void InlineEditableLabel::handleAnimFinished()
+    {
+        if (!mIconEffect) return;
+
+        if (qFuzzyIsNull(mIconEffect->opacity())) mEditIcon->hide();
     }
 } // ui

@@ -36,6 +36,7 @@ namespace ui
         void startEditing();
         void finishEditing();
         void fadeIconTo(qreal targetOpacity);
+        void handleAnimFinished();
 
     private:
         QLabel* mLabel;
