@@ -53,26 +53,32 @@ int main(int argc, char* argv[])
 
     // Inactivity tester
     auto idleDetector = timetracker::createIdleDetector();
-
+    qDebug() << "[main] IdleDetector created.";
     auto* aMtr = new timetracker::ActivityMonitor(
         std::move(idleDetector),
         inactiveThresh,
         reminderPollIntervalMS,
         &app);
+    qDebug() << "[main] Activity Monitor created.";
 
     auto* rSched = new timetracker::ReminderScheduler(
         warningThresh,
         hardStopThresh,
         &app);
+    qDebug() << "[main] ReminderScheduler created.";
 
     auto* sMgr = new timetracker::SessionManager(&app);
+    qDebug() << "[main] SessionManager created.";
 
     auto* appController = new timetracker::AppController(aMtr, rSched, sMgr);
     appController->initialize();
+    qDebug() << "[main] AppController created.";
 
 
     auto* panel = new ui::TimeTrackerPanel{};
+    qDebug() << "[main] TimeTrackerPanel created";
     auto* flow = new ui::UiFlowController(panel, appController, sMgr, &app);
+    qDebug() << "[main] UIFlowController";
 
     panel->show();
     flow->start();

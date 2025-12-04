@@ -26,12 +26,10 @@ namespace ui
          * @param page Next page to replace the current.
          */
         void setPage(BaseCardPage* page);
+        BaseCardPage* getPage() const { return mCurrentPage;}
 
     signals:
         void toggled(bool open);
-
-    protected:
-        void mousePressEvent(QMouseEvent* event) override;
 
     private:
         void updateTargetGeometries();

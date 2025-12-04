@@ -40,6 +40,9 @@ namespace ui
 
         void showBackButton(bool show) const;
         QPushButton* getBackButton() const { return mBackChevron; }
+
+        SideTab* getSideTab() const { return mSideTab; }
+
     signals:
         void backRequested();
 

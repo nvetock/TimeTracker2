@@ -1,5 +1,6 @@
 #include "SideTab.h"
 
+#include <QMouseEvent>
 #include <QPainter>
 #include <QPainterPath>
 
@@ -28,6 +29,17 @@ namespace ui
         Q_UNUSED(event);
         mHover = false;
         update();
+    }
+
+    void SideTab::mousePressEvent(QMouseEvent* event)
+    {
+        if (event->button() == Qt::LeftButton)
+        {
+            emit clicked();
+            return;
+        }
+
+        QWidget::mousePressEvent(event);
     }
 
     void SideTab::paintEvent(QPaintEvent* event)

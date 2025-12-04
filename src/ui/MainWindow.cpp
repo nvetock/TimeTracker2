@@ -1,5 +1,8 @@
 #include "MainWindow.h"
 
+#include <QFormLayout>
+#include <QVBoxLayout>
+
 #include "appservice/SessionManager.h"
 
 namespace ui
