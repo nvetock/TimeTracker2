@@ -38,6 +38,8 @@ namespace ui
         QPushButton* mAllButton;
         QPushButton* mSingleButton;
         QPushButton* mRangeButton;
+        QPushButton* mSettingsButton;
+        QPushButton* mMenuButton;
 
     };
 } // ui

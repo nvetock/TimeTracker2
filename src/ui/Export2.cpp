@@ -30,17 +30,15 @@ namespace ui
         mCsvRadio = generateButton("CSV", "RadioBtn", 44, true, this);
         mJsonRadio = generateButton("Json", "RadioBtn", 44, true, this);
 
-        auto* radioBtnLayout = new QHBoxLayout(this);
+        auto* radioBtnLayout = new QHBoxLayout();
         auto* radioBtnGroup = new QButtonGroup(radioBtnLayout);
         radioBtnGroup->setExclusive(true);
         radioBtnGroup->addButton(mCsvRadio);
         radioBtnGroup->addButton(mJsonRadio);
-        qDebug() << "added radio btns to btngroup.";
 
         setZeroMarginAndSpaceBetween(radioBtnLayout, 8);
         radioBtnLayout->addWidget(mCsvRadio);
         radioBtnLayout->addWidget(mJsonRadio);
-        qDebug() << "created radiobtnLayout buttons.";
 
         auto* radioSection = new QVBoxLayout();
         setZeroMarginAndSpaceBetween(radioSection, 8);
@@ -57,8 +55,8 @@ namespace ui
         mAllButton = generateButton("All Logs", "PrimaryBtn", 44, this);
         mSingleButton = generateButton("Single Date", "PrimaryBtn", 44, this);
         mRangeButton = generateButton("Date Range", "PrimaryBtn", 44, this);
-        qDebug() << "created export buttons.";
-        auto* exportBtnLayout = new QVBoxLayout(this);
+
+        auto* exportBtnLayout = new QVBoxLayout();
         setZeroMarginAndSpaceBetween(exportBtnLayout, 16);
         exportBtnLayout->setAlignment(Qt::AlignCenter);
         exportBtnLayout->addWidget(Export);
@@ -66,12 +64,23 @@ namespace ui
         exportBtnLayout->addWidget(mSingleButton, 0, Qt::AlignHCenter);
         exportBtnLayout->addWidget(mRangeButton, 0, Qt::AlignHCenter);
 
+        // FOOTER BUTTONS
+        mMenuButton = generateButton("Menu", "SecondaryBtn", true, this);
+        mSettingsButton = generateButton("Settings", "SecondaryBtn", true, this);
+        auto* secondaryBtnGroup = new QVBoxLayout();
+        secondaryBtnGroup->setSpacing(16);
+        secondaryBtnGroup->addWidget(mSettingsButton,    0, Qt::AlignHCenter);
+        secondaryBtnGroup->addWidget(mMenuButton,    0, Qt::AlignHCenter);
+
+
+
         // CONNECTIONS
 
         connect(mCsvRadio, &QRadioButton::toggled,
             this, &Export2::onCsvToggled);
         connect(mJsonRadio, &QRadioButton::toggled,
             this, &Export2::onJsonToggled);
+
 
         if (auto* headerBack = getBackButton())
         {
@@ -87,6 +96,9 @@ namespace ui
         body->addLayout(radioSection);
         body->addLayout(exportBtnLayout);
 
+        auto* footer = getFooterLayout();
+        footer->addLayout(secondaryBtnGroup);
+        footer->addSpacing(32);
     }
 
     void Export2::onCsvToggled(const bool checked)

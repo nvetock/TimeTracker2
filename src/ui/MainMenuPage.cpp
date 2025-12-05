@@ -13,7 +13,6 @@ namespace ui
         showBackButton(false); // root page – no back chevron
 
         auto* body   = getBodyLayout();
-        auto* footer = getFooterLayout();
 
         // Minimal body – could be logo / tagline
         auto* titleLabel = new QLabel("What would you like to do?", this);
@@ -63,6 +62,7 @@ namespace ui
         secondaryBtnGroup->addWidget(mSettingsBtn,    0, Qt::AlignHCenter);
         secondaryBtnGroup->addWidget(mQuitBtn,        0, Qt::AlignHCenter);
 
+        auto* footer = getFooterLayout();
         footer->addLayout(secondaryBtnGroup);
         footer->addSpacing(32);
 
