@@ -8,6 +8,7 @@
 #include <QComboBox>
 #include <QPushButton>
 #include <QDate>
+#include "ClickableSvgWidget.h"
 
 namespace ui
 {
@@ -26,8 +27,6 @@ namespace ui
         setTitle("EXPORT");
         showBackButton(true);
 
-        auto* body = getBodyLayout();
-        auto* footer = getFooterLayout();
 
         // ---- Format row ----
         auto* formatLabel = new QLabel("FORMAT", this);
@@ -100,6 +99,7 @@ namespace ui
         bodyGroup->addLayout(singleRow);
         bodyGroup->addLayout(rangeRow);
 
+        auto* body = getBodyLayout();
         body->addLayout(bodyGroup);
 
         // ---- Footer buttons ----
@@ -121,7 +121,9 @@ namespace ui
         btnGroup->addWidget(mExportBtn, 0, Qt::AlignHCenter);
         btnGroup->addWidget(mBackBtn, 0, Qt::AlignHCenter);
 
+        auto* footer = getFooterLayout();
         footer->addLayout(btnGroup);
+        footer->addSpacing(32);
 
         // ---- Connections ----
         connect(mAllRadio, &QRadioButton::toggled,

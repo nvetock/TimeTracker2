@@ -41,6 +41,8 @@ The other solution was manual time-entry and who has time for that?
 - ~~TrackWorkSetupPage.cpp~~
 - ~~LogHistoryPage.cpp~~
 - ~~SettingsPage.cpp~~
+
+---
 ## Architecture
 ### Domain
 - WorkSession

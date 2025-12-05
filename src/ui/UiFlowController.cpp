@@ -18,6 +18,7 @@
 #include <QStandardPaths>
 #include <algorithm>
 
+#include "Export2.h"
 #include "ExportPage.h"
 #include "appservice/AppController.h"
 #include "appservice/SessionManager.h"
@@ -396,13 +397,13 @@ namespace ui
 
     void UiFlowController::showExport()
     {
-        auto* page = new ExportPage(mPanel);
+        auto* page = new Export2(mPanel);
         page->setTitle("EXPORT");
 
-        connect(page, &ExportPage::backRequested,
+        connect(page, &Export2::backRequested,
                 this, &UiFlowController::showMainMenu);
 
-        connect(page, &ExportPage::exportRequested,
+        connect(page, &Export2::exportRequested,
                 this, [this](const QString& format,
                              const QDate& from,
                              const QDate& to)

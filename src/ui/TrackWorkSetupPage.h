@@ -43,6 +43,8 @@ namespace ui
         QLabel* mDate;
         QComboBox* mTaskCombo;
         QComboBox* mProjectCombo;
+        bool taskPopupShown;
+        bool projectPopupShown;
         InlineEditableLabel* mDescriptionEdit;
         QPushButton* mReadyBtn;
         QPushButton* mBackBtn;

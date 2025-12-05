@@ -65,6 +65,7 @@ set(TIMETRACKER_SOURCES
         src/ui/TrackWorkTimerPage.cpp
         src/ui/TrackWorkSetupPage.cpp
         src/ui/ExportPage.cpp
+        src/ui/Export2.cpp
         src/ui/LogHistoryPage.cpp
         src/ui/SettingsPage.cpp
         src/ui/NewItemDialog.cpp
@@ -73,6 +74,8 @@ set(TIMETRACKER_SOURCES
         src/ui/MainMenuPage.cpp
         src/ui/InlineEditableLabel.cpp
         src/ui/ClickableSvgWidget.h
+        src/ui/UiElemStyler.h
+        src/ui/UiElemStyler.cpp
 
 )
 

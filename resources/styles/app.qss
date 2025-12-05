@@ -67,16 +67,22 @@ QComboBox#ProjectCombo:focus {
     border: 2px solid #00E099;
 }
 
+
 /* Editable text field */
 QComboBox#TaskCombo QLineEdit,
 QComboBox#ProjectCombo QLineEdit {
     background: transparent;
-    border: none;            /* REQUIRED — prevents bevel */
+    border: none;
     padding: 0;
     margin: 0;
     color: #FFFFFF;
-    selection-background-color: #00E099;
+    selection-background-color: white;
     selection-color: #262626;
+}
+
+QComboBox#TaskCombo QLineEdit:editable,
+QComboBox#ProjectCombo QLineEdit:editable {
+    selection-background-color: #00E099;
 }
 
 QSvgWidget#ComboArrowIcon {
@@ -111,6 +117,13 @@ QComboBox#ProjectCombo QAbstractItemView {
 QComboBox#TaskCombo QAbstractItemView::item,
 QComboBox#ProjectCombo QAbstractItemView::item {
     padding: 6px 8px;
+}
+
+QComboBox#TaskCombo QAbstractItemView::item::hover,
+QComboBox#TaskCombo QAbstractItemView::item:selected,
+QComboBox#ProjectCombo QAbstractItemView::item::hover,
+QComboBox#ProjectCombo QAbstractItemView::item:selected {
+    background-color: #00E099;
 }
 
 /*
@@ -259,6 +272,30 @@ QPushButton#SecondaryBtn:hover {
     color: #00F5C6;
 }
 
+QPushButton#RadioBtn {
+    background-color: #2E8B6E;
+    color: #262626;
+    font-family: "Barlow Semi Condensed", Arial, sans-serif;
+    font-size: 32px;
+    padding-right: 16px;
+    padding-left: 16px;
+    padding-bottom: 4px;
+    font-weight: 700;
+    border-radius: 8px;
+    border: none;
+}
+
+QPushButton#RadioBtn:hover {
+    background-color: #00F5C6;
+}
+
+QPushButton#RadioBtn:pressed {
+    background-color: #00C385;
+}
+
+QPushButton#RadioBtn:checked {
+    background-color: #00E099;
+}
 
 /*
  *
@@ -311,4 +348,9 @@ QLabel#BodyCopy {
     font-family: "Barlow";
     font-weight: 700;
     font-size: 20px;
+}
+
+
+QLineEdit {
+    selection-background-color: #00E099;
 }
