@@ -89,7 +89,7 @@ namespace ui
     mMainCard = new GradientFrame{this};
     // If your QSS targets QFrame#MainCard, use this:
     mMainCard->setObjectName("MainCard");
-    mMainCard->setFixedSize(360, 450);
+    mMainCard->setFixedSize(360, 470);
 
     mCardLayout = new QVBoxLayout{mMainCard};
     mCardLayout->setContentsMargins(24, 20, 24, 20);

@@ -69,7 +69,7 @@ namespace ui
         mMenuBtn = generateButton("Menu", "SecondaryBtn", true, this);
 
         auto* btnLayout = new QVBoxLayout();
-        setZeroMarginAndSpaceBetween(btnLayout, 4);
+        setZeroMarginAndSpaceBetween(btnLayout, 8);
         btnLayout->addWidget(mStartBtn, 0, Qt::AlignHCenter);
         btnLayout->addWidget(mMenuBtn, 0, Qt::AlignHCenter);
         btnLayout->addWidget(mPauseBtn, 0, Qt::AlignHCenter);

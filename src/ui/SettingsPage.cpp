@@ -7,6 +7,7 @@
 #include <QPushButton>
 #include <QFileDialog>
 #include <QCursor>
+#include <QLabel>
 
 #include "UiElemStyler.h"
 
@@ -22,7 +23,7 @@ namespace ui
         // --- Form area ----------------------------------------------------
         auto* formLayout = new QFormLayout();
         formLayout->setContentsMargins(0, 0, 0, 0);
-        formLayout->setSpacing(8);
+        formLayout->setSpacing(16);
 
         // Name
         mNameEdit = new QLineEdit(this);
@@ -49,32 +50,40 @@ namespace ui
         // Reset buttons row
         auto* resetRow = new QHBoxLayout();
         setZeroMarginAndSpaceBetween(resetRow, 8);
+        resetRow->setAlignment(Qt::AlignHCenter);
 
-        mResetTasksBtn = generateButton("Reset Tasks", "SecondaryBtn", 16, this);
-        mResetProjectsBtn = generateButton("Reset Projects", "SecondaryBtn", 16, this);
+        auto* resetSection = new QVBoxLayout();
+        setZeroMarginAndSpaceBetween(resetSection, 4);
+        auto* resetLabel = generateLabel("Reset", "StatusLabel", "center", false, this);
+        resetSection->addWidget(resetLabel);
+        resetSection->addLayout(resetRow);
+
+
+        mResetTasksBtn = generateButton("Tasks", "RadioBtn", 32, this);
+        mResetProjectsBtn = generateButton("Projects", "RadioBtn", 32, this);
 
         resetRow->addWidget(mResetTasksBtn);
         resetRow->addWidget(mResetProjectsBtn);
 
         formLayout->addRow(tr("NAME"), mNameEdit);
         formLayout->addRow(tr("SAVE LOCATION"), saveDirRow);
-        formLayout->addRow(tr("DATA"), resetRow);
 
+        body->addSpacing(8);
         body->addLayout(formLayout);
-        body->addStretch();
+        body->addSpacing(32);
+        body->addLayout(resetSection);
 
-        // --- Footer: Save button + maybe Cancel/Back ----------------------
         mSaveBtn = generateButton("Save", "PrimaryBtn", 44, this);
         mMenuBtn = generateButton("Menu", "SecondaryBtn", true, this);
 
         auto* btnLayout = new QVBoxLayout();
-        setZeroMarginAndSpaceBetween(btnLayout, 0);
+        setZeroMarginAndSpaceBetween(btnLayout, 8);
         btnLayout->addWidget(mSaveBtn, 0, Qt::AlignHCenter);
         btnLayout->addWidget(mMenuBtn, 0, Qt::AlignHCenter);
 
         auto* footer = getFooterLayout();
         footer->addLayout(btnLayout);
-        footer->addSpacing(4);
+        footer->addSpacing(16);
 
         // --- Connections --------------------------------------------------
         connect(mBrowseBtn, &QPushButton::clicked,

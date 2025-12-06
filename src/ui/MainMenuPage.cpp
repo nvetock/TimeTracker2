@@ -30,7 +30,7 @@ namespace ui
 
         mQuitBtn = generateButton("Quit", "SecondaryBtn", true, this);
 
-            auto* mainBtnGroup = new QVBoxLayout();
+        auto* mainBtnGroup = new QVBoxLayout();
         setZeroMarginAndSpaceBetween(mainBtnGroup, 10);
         mainBtnGroup->addWidget(mTrackWorkBtn,   0, Qt::AlignHCenter);
         mainBtnGroup->addWidget(mLogHistoryBtn,  0, Qt::AlignHCenter);
