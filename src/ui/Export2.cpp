@@ -62,11 +62,6 @@ namespace ui
         // EXPORT BUTTONS
 
         auto* Export = generateLabel("Export", "StatusLabel", "center", false, this);
-
-            new QLabel("EXPORT", this);
-        Export->setObjectName("StatusLabel"); // reuse small label styling
-        Export->setAlignment(Qt::AlignCenter);
-
         mAllButton = generateButton("All Logs", "PrimaryBtn", 40, this);
         mSingleButton = generateButton("Single Date", "PrimaryBtn", 40, this);
         mRangeButton = generateButton("Date Range", "PrimaryBtn", 40, this);

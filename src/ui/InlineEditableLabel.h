@@ -16,7 +16,7 @@ namespace ui
     {
         Q_OBJECT
     public:
-        explicit InlineEditableLabel(QWidget* parent = nullptr);
+        InlineEditableLabel(QWidget* parent = nullptr);
 
         void setText(const QString& text);
         QString getText() const;

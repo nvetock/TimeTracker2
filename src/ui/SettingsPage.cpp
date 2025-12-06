@@ -9,6 +9,7 @@
 #include <QCursor>
 #include <QLabel>
 
+#include "InlineEditableLabel.h"
 #include "UiElemStyler.h"
 
 namespace ui
@@ -20,15 +21,18 @@ namespace ui
 
         auto* body   = getBodyLayout();
 
-        // --- Form area ----------------------------------------------------
-        auto* formLayout = new QFormLayout();
-        formLayout->setContentsMargins(0, 0, 0, 0);
-        formLayout->setSpacing(16);
-
         // Name
-        mNameEdit = new QLineEdit(this);
-        mNameEdit->setObjectName("SettingsNameEdit");
-        mNameEdit->setPlaceholderText("Your name (for logs)");
+        auto* nameLabel = generateLabel("Name", "StatusLabel", "center", false, this);
+        mNameEdit = new InlineEditableLabel{this};
+        mNameEdit->setObjectName("InlineEditLabel");
+        mNameEdit->setText("Your name (for logs)");
+
+        auto* nameSection = new QVBoxLayout();
+        setZeroMarginAndSpaceBetween(nameSection, 8);
+        nameSection->setAlignment(Qt::AlignHCenter);
+        nameSection->addWidget(nameLabel);
+        nameSection->addWidget(mNameEdit);
+
 
         // Save directory + browse
         auto* saveDirRow = new QHBoxLayout();
@@ -36,16 +40,22 @@ namespace ui
         saveDirRow->setSpacing(4);
 
         mSaveDirEdit = new QLineEdit(this);
-        mSaveDirEdit->setObjectName("SettingsSaveDirEdit");
+        mSaveDirEdit->setObjectName("InlineLineEdit");
         mSaveDirEdit->setPlaceholderText("Save directory for logs/CSV");
 
         mBrowseBtn = new QPushButton(tr("Browse"), this);
-        mBrowseBtn->setObjectName("SettingsBrowseButton");
+        mBrowseBtn->setObjectName("RadioBtn");
         mBrowseBtn->setCursor(Qt::PointingHandCursor);
         mBrowseBtn->setFixedHeight(28);
 
         saveDirRow->addWidget(mSaveDirEdit, 1);
         saveDirRow->addWidget(mBrowseBtn, 0);
+
+        auto* saveDirLabel = generateLabel("File Location", "StatusLabel", "center", false, this);
+        auto* saveSection = new QVBoxLayout();
+        setZeroMarginAndSpaceBetween(saveSection, 8);
+        saveSection->addWidget(saveDirLabel);
+        saveSection->addLayout(saveDirRow);
 
         // Reset buttons row
         auto* resetRow = new QHBoxLayout();
@@ -65,11 +75,10 @@ namespace ui
         resetRow->addWidget(mResetTasksBtn);
         resetRow->addWidget(mResetProjectsBtn);
 
-        formLayout->addRow(tr("NAME"), mNameEdit);
-        formLayout->addRow(tr("SAVE LOCATION"), saveDirRow);
-
         body->addSpacing(8);
-        body->addLayout(formLayout);
+        body->addLayout(nameSection);
+        body->addSpacing(24);
+        body->addLayout(saveSection);
         body->addSpacing(32);
         body->addLayout(resetSection);
 
@@ -137,7 +146,7 @@ namespace ui
     void SettingsPage::handleSave()
     {
         infra::AppSettings settings;
-        settings.userName      = mNameEdit    ? mNameEdit->text().trimmed()      : QString{};
+        settings.userName      = mNameEdit    ? mNameEdit->getText().trimmed()      : QString{};
         settings.saveDirectory = mSaveDirEdit ? mSaveDirEdit->text().trimmed()   : QString{};
         // tasks/projects remain whatever the controller has in memory and will merge
 

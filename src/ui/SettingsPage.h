@@ -3,6 +3,11 @@
 #include "BaseCardPage.h"
 #include "infra/AppSettingsRepository.h"
 
+namespace ui
+{
+    class InlineEditableLabel;
+}
+
 class QLineEdit;
 class QPushButton;
 
@@ -33,7 +38,7 @@ namespace ui
         void handleResetProjects();
 
     private:
-        QLineEdit*   mNameEdit{nullptr};
+        InlineEditableLabel*   mNameEdit{nullptr};
         QLineEdit*   mSaveDirEdit{nullptr};
         QPushButton* mBrowseBtn{nullptr};
         QPushButton* mSaveBtn{nullptr};
