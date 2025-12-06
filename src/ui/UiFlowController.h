@@ -32,7 +32,6 @@ namespace ui
 
         void start(); // show main menu
 
-
     private:
         // Navigation helpers
         void showMainMenu();

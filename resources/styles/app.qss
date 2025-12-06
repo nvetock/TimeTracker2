@@ -354,3 +354,29 @@ QLabel#BodyCopy {
 QLineEdit {
     selection-background-color: #00E099;
 }
+
+
+/*
+ *
+ * EXPORT STYLING
+ *
+ */
+
+QLabel#ExportResultLabel {
+    font-family: "Barlow Semi Condensed", Arial, sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+     letter-spacing: 1px;
+}
+
+QLabel#ExportResultLabel[exportSuccess="true"] {
+    color: #FFFFFF;
+ }
+
+QLabel#ExportResultLabel[exportSuccess="false"] {
+     color: #E0CA00; /* red */
+ }
+
+ QSvgWidget#ExportResultIcon {
+     background: transparent;
+ }

@@ -57,14 +57,14 @@ namespace exporter
         return out;
     }
 
-    void exportLogsToCsv(const QVector<infra::SessionLogEntry>& logs,
+    bool exportLogsToCsv(const QVector<infra::SessionLogEntry>& logs,
                          const QString& filePath)
     {
         QFile f(filePath);
         if (!f.open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text))
         {
             qWarning() << "[Export] Failed to open CSV file for write:" << filePath;
-            return;
+            return false;
         }
 
         QTextStream out(&f);
@@ -93,9 +93,10 @@ namespace exporter
                 << e.activeSeconds            << ','
                 << e.totalSeconds             << '\n';
         }
+        return true;
     }
 
-    void exportLogsToJson(const QVector<infra::SessionLogEntry>& logs,
+    bool exportLogsToJson(const QVector<infra::SessionLogEntry>& logs,
                           const QString& filePath)
     {
         QJsonArray arr;
@@ -124,12 +125,13 @@ namespace exporter
         if (!f.open(QIODevice::WriteOnly | QIODevice::Truncate))
         {
             qWarning() << "[Export] Failed to open JSON file for write:" << filePath;
-            return;
+            return false;
         }
 
         QJsonDocument doc(root);
         f.write(doc.toJson(QJsonDocument::Indented));
         f.close();
+        return true;
     }
 
 }
@@ -404,7 +406,7 @@ namespace ui
                 this, &UiFlowController::showMainMenu);
 
         connect(page, &Export2::exportRequested,
-                this, [this](const QString& format,
+                this, [this, page](const QString& format,
                              const QDate& from,
                              const QDate& to)
                 {
@@ -426,6 +428,7 @@ namespace ui
                     if (filtered.isEmpty())
                     {
                         qWarning() << "[UiFlowController] No logs to export for chosen range.";
+                        page->showExportResult(false, "Failed to write export file.");
                         return;
                     }
 
@@ -456,14 +459,19 @@ namespace ui
                         return;
 
                     // 3) write file
+                    bool ok{false};
                     if (format == "csv")
                     {
-                        exporter::exportLogsToCsv(filtered, filePath);
+                        ok = exporter::exportLogsToCsv(filtered, filePath);
                     }
                     else
                     {
-                        exporter::exportLogsToJson(filtered, filePath);
+                        ok = exporter::exportLogsToJson(filtered, filePath);
                     }
+
+                    // 4) export result
+                    ok ? page->showExportResult(true, "Export successful.")
+                       : page->showExportResult(false, "Failed to write export file.");
                 });
 
         mPanel->setPage(page);

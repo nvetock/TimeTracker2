@@ -64,9 +64,10 @@ namespace ui
         auto* btn = new QPushButton(buttonText.toUpper(), parent);
         btn->setObjectName(className);
         btn->setCursor(Qt::PointingHandCursor);
+        btn->setMinimumHeight(44);
         btn->setMaximumHeight(height);
         btn->setCheckable(isCheckable);
-        btn->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Expanding);
+        btn->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 
         return btn;
     }

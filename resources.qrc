@@ -11,5 +11,7 @@
     <qresource prefix="/icons">
         <file>resources/icons/pencil.svg</file>
         <file>resources/icons/arrow_down.svg</file>
+        <file>resources/icons/check_circle.svg</file>
+        <file>resources/icons/error.svg</file>
     </qresource>
 </RCC>

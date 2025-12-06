@@ -13,6 +13,7 @@
 #include <QDialog>
 #include <QDialogButtonBox>
 #include <QGridLayout>
+#include <QTextCharFormat>
 
 #include "InlineEditableLabel.h"
 #include "UiElemStyler.h"
@@ -22,6 +23,8 @@ namespace ui
     Export2::Export2(QWidget* parent)
         : BaseCardPage{parent}
         , mExportFormat{ExportFormat::Csv}
+        , mResultIcon{nullptr}
+        , mResultLabel{nullptr}
         , mCsvRadio{nullptr}
         , mJsonRadio{nullptr}
         , mAllButton{nullptr}
@@ -68,21 +71,38 @@ namespace ui
         mRangeButton = generateButton("Date Range", "PrimaryBtn", 44, this);
 
         auto* exportBtnLayout = new QVBoxLayout();
-        setZeroMarginAndSpaceBetween(exportBtnLayout, 16);
+        setZeroMarginAndSpaceBetween(exportBtnLayout, 8);
         exportBtnLayout->setAlignment(Qt::AlignCenter);
         exportBtnLayout->addWidget(Export);
         exportBtnLayout->addWidget(mAllButton, 0, Qt::AlignHCenter);
         exportBtnLayout->addWidget(mSingleButton, 0, Qt::AlignHCenter);
         exportBtnLayout->addWidget(mRangeButton, 0, Qt::AlignHCenter);
 
+
+        // RESULT AREA
+        mResultIcon = generateIcon(":/icons/resources/icons/check_circle.svg", this, "ExportResultIcon", 32);
+        mResultIcon->hide();
+
+        mResultLabel = new QLabel("", this);
+        mResultLabel->setObjectName("ExportResultLabel");
+        mResultLabel->setAlignment(Qt::AlignCenter);
+        mResultLabel->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
+        mResultLabel->hide();
+
+        auto* resultLayout = new QHBoxLayout();
+        setZeroMarginAndSpaceBetween(resultLayout, 4);
+        resultLayout->setAlignment(Qt::AlignCenter);
+        resultLayout->addWidget(mResultIcon, 0, Qt::AlignHCenter);
+        resultLayout->addWidget(mResultLabel);
+
+
         // FOOTER BUTTONS
         mMenuButton = generateButton("Menu", "SecondaryBtn", true, this);
         mSettingsButton = generateButton("Settings", "SecondaryBtn", true, this);
         auto* secondaryBtnGroup = new QVBoxLayout();
-        secondaryBtnGroup->setSpacing(16);
+        secondaryBtnGroup->setSpacing(8);
         secondaryBtnGroup->addWidget(mSettingsButton,    0, Qt::AlignHCenter);
         secondaryBtnGroup->addWidget(mMenuButton,    0, Qt::AlignHCenter);
-
 
 
         // CONNECTIONS
@@ -112,10 +132,33 @@ namespace ui
         body->setAlignment(Qt::AlignCenter);
         body->addLayout(radioSection);
         body->addLayout(exportBtnLayout);
+        body->addStretch(1);
+        body->addLayout(resultLayout);
 
         auto* footer = getFooterLayout();
         footer->addLayout(secondaryBtnGroup);
         footer->addSpacing(32);
+    }
+
+    void Export2::showExportResult(bool success, const QString& message)
+    {
+        if (!mResultIcon || !mResultLabel) return;
+
+        const QString iconPath = success
+            ? QStringLiteral(":/icons/resources/icons/check_circle.svg")
+            : QStringLiteral(":/icons/resources/icons/error.svg");
+
+        mResultIcon->load(iconPath);
+
+        mResultLabel->setProperty("exportSuccess", success ? "true" : "false");
+
+        mResultLabel->style()->unpolish(mResultLabel);
+        mResultLabel->style()->polish(mResultLabel);
+
+        mResultLabel->setText(message);
+
+        mResultIcon->show();
+        mResultLabel->show();
     }
 
     QString Export2::exportFormatToString(const ExportFormat f)
@@ -155,6 +198,147 @@ namespace ui
     void Export2::onRangeClicked()
     {
         // show calendar with an export button
+        QDialog dialog(this);
+        dialog.setWindowTitle(tr("Export Date Range"));
+
+        auto* layout = new QVBoxLayout(&dialog);
+
+        auto* cal = new QCalendarWidget(&dialog);
+        cal->setSelectedDate(QDate::currentDate());
+        layout->addWidget(cal);
+
+        auto* dateLayout = new QHBoxLayout();
+        setZeroMarginAndSpaceBetween(dateLayout, 4);
+        dateLayout->setAlignment(Qt::AlignCenter);
+        //auto* infoLayout = new QGridLayout();
+        //infoLayout->setContentsMargins(0,0,0,0);
+        //infoLayout->setHorizontalSpacing(8);
+        //infoLayout->setVerticalSpacing(4);
+
+        //auto* fromLabel = new QLabel(tr("From"), &dialog);
+        auto* fromValue = new QLabel(tr("From"), &dialog);
+        auto* separator = new QLabel(tr("->"), &dialog);
+        auto* toValue = new QLabel(tr("To"), &dialog);
+        //auto* toLabel = new QLabel(tr("To"), &dialog);
+
+        dateLayout->addWidget(fromValue);
+        dateLayout->addWidget(separator);
+        dateLayout->addWidget(toValue);
+        //infoLayout->addWidget(fromLabel, 0, 0);
+        //infoLayout->addWidget(fromValue, 0, 1);
+        //infoLayout->addWidget(toLabel, 1, 0);
+        //infoLayout->addWidget(toValue, 1, 1);
+
+        layout->addLayout(dateLayout);
+
+        auto* buttons = new QDialogButtonBox(
+            QDialogButtonBox::Cancel | QDialogButtonBox::Ok, &dialog
+        );
+        auto* confirmBtn = buttons->button(QDialogButtonBox::Ok);
+        confirmBtn->setText("Export");
+        confirmBtn->setEnabled(false);
+        layout->addWidget(buttons);
+
+        connect(buttons, &QDialogButtonBox::accepted, &dialog, &QDialog::accept);
+        connect(buttons, &QDialogButtonBox::rejected, &dialog, &QDialog::reject);
+
+        QDate rangeStart;
+        QDate rangeEnd;
+
+        // Format highlighted area
+        QTextCharFormat highlightFormat;
+        highlightFormat.setBackground(QBrush(QColor(0, 224, 153, 60)));
+        highlightFormat.setForeground(QBrush(Qt::white));
+
+        QTextCharFormat edgeFormat = highlightFormat;
+        edgeFormat.setFontWeight(QFont::Bold);
+
+        // clear the previous highlight
+        auto clearRangeFormatting = [cal](const QDate& from, const QDate& to)
+        {
+            if (!from.isValid() || !to.isValid()) return;
+
+            QDate d = from;
+            while (d <= to)
+            {
+                cal->setDateTextFormat(d, QTextCharFormat());
+                d = d.addDays(1);
+            }
+        };
+
+        // apply highlight to current range
+        auto applyRangeFormatting = [&](const QDate& from, const QDate& to)
+        {
+            if (!from.isValid() || !to.isValid()) return;
+
+            QDate d = from;
+            while (d <= to)
+            {
+                if (d == from || d == to)
+                {
+                    cal->setDateTextFormat(d, edgeFormat);
+                }
+                else
+                {
+                    cal->setDateTextFormat(d, highlightFormat);
+                }
+
+                d = d.addDays(1);
+            }
+        };
+
+        // CONNECTION on user clicking cal date
+        QObject::connect(cal, &QCalendarWidget::clicked,
+            &dialog, [&](const QDate& d)
+            {
+                // if no start is set OR a full range was previously selected
+                // use this to start over
+                if (!rangeStart.isValid() || (rangeStart.isValid() && rangeEnd.isValid()))
+                {
+                    // clear old
+                    clearRangeFormatting(rangeStart, rangeEnd);
+
+                    rangeStart = d;
+                    rangeEnd = QDate();//invalid date
+
+                    fromValue->setText(d.toString("yyyy-MM-dd"));
+                    toValue->setText("-");
+                    confirmBtn->setEnabled(false);
+
+                    // highlight just start day
+                    applyRangeFormatting(rangeStart, rangeStart);
+                    return;
+                }
+
+                // Start is set, but no end yet -> finish range
+                if (rangeStart.isValid() && !rangeEnd.isValid())
+                {
+                    clearRangeFormatting(rangeStart, rangeStart);
+
+                    if (d < rangeStart)
+                    {
+                        rangeEnd = rangeStart;
+                        rangeStart = d;
+                    }
+                    else
+                    {
+                        rangeEnd = d;
+                    }
+
+                    fromValue->setText(rangeStart.toString("yyyy-MM-dd"));
+                    toValue->setText(rangeEnd.toString("yyyy-MM-dd"));
+
+                    // apply highlight to full range
+                    applyRangeFormatting(rangeStart, rangeEnd);
+                    confirmBtn->setEnabled(true);
+                }
+            });
+
+        if (dialog.exec() == QDialog::Accepted && rangeStart.isValid() && rangeEnd.isValid())
+        {
+            const QString format = exportFormatToString(mExportFormat);
+            emit exportRequested(format, rangeStart, rangeEnd);
+        }
     }
 
     void Export2::onSingleClicked()

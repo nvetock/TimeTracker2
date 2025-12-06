@@ -18,6 +18,8 @@ namespace ui
 
         explicit Export2(QWidget* parent = nullptr);
 
+        void showExportResult(bool success, const QString& message);
+
     signals:
         void menuRequested();
 
@@ -38,6 +40,10 @@ namespace ui
         void exportDates(const QDate& from, const QDate& to);
     private:
         ExportFormat mExportFormat;
+
+        QSvgWidget* mResultIcon;
+        QLabel* mResultLabel;
+
         QPushButton* mCsvRadio;
         QPushButton* mJsonRadio;
         QPushButton* mAllButton;
