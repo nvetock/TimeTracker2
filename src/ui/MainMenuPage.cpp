@@ -12,7 +12,6 @@ namespace ui
         : BaseCardPage(parent)
     {
         setTitle("TIME TRACKER");
-        showBackButton(false); // root page – no back chevron
 
         auto* body   = getBodyLayout();
 

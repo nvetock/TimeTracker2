@@ -24,7 +24,7 @@ namespace ui
         void setDescriptionText(const QString& text);
 
         QPushButton* getStartButton() const { return mStartBtn; }
-        QPushButton* getReturnButton() const { return mReturnBtn; }
+        QPushButton* getMenuButton() const { return mMenuBtn; }
 
         void applySessionStatus(timetracker::WorkSession::Status status);
         bool isPaused() const { return mIsPaused; }
@@ -38,7 +38,6 @@ namespace ui
         void onStartButtonClicked();
         void onPauseButtonClicked();
         void onStopButtonClicked();
-        void onReturnButtonClicked();
 
         void onUiTick();
 
@@ -54,7 +53,7 @@ namespace ui
         QPushButton* mStartBtn;
         QPushButton* mPauseBtn;
         QPushButton* mStopBtn;
-        QPushButton* mReturnBtn;
+        QPushButton* mMenuBtn;
 
         QTimer* mUiTimer;
         int mElapsedSeconds;

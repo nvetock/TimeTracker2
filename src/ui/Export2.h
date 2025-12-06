@@ -21,7 +21,7 @@ namespace ui
         void showExportResult(bool success, const QString& message);
 
     signals:
-        void menuRequested();
+        void settingsRequested();
 
         void exportRequested(const QString& format,
                              const QDate& fromDate,
@@ -33,7 +33,7 @@ namespace ui
         void onRangeClicked();
         void onSingleClicked();
 
-        void onMenuClicked();
+        void onSettingsClicked();
 
     private:
         QString exportFormatToString(const ExportFormat f);

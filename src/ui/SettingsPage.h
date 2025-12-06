@@ -18,9 +18,9 @@ namespace ui
         /// Bind current settings into the UI fields.
         void loadFromSettings(const infra::AppSettings& settings);
 
-        signals:
-            /// User clicked SAVE: send out the updated settings.
-            void settingsSaved(const infra::AppSettings& settings);
+    signals:
+        /// User clicked SAVE: send out the updated settings.
+        void settingsSaved(const infra::AppSettings& settings);
 
         /// User wants to clear / reset lists.
         void resetTasksRequested();

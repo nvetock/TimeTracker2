@@ -47,7 +47,7 @@ namespace ui
         bool projectPopupShown;
         InlineEditableLabel* mDescriptionEdit;
         QPushButton* mReadyBtn;
-        QPushButton* mBackBtn;
+        QPushButton* mMenuBtn;
 
         // For tagging 'Add new' entries
         static constexpr int RoleKind = Qt::UserRole + 1;

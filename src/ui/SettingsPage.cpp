@@ -14,7 +14,6 @@ namespace ui
         : BaseCardPage(parent)
     {
         setTitle("SETTINGS");
-        showBackButton(true); // use header chevron to go back
 
         auto* body   = getBodyLayout();
         auto* footer = getFooterLayout();
@@ -97,6 +96,7 @@ namespace ui
 
         connect(mResetProjectsBtn, &QPushButton::clicked,
                 this, &SettingsPage::handleResetProjects);
+
 
         // The back chevron signal comes from BaseCardPage (backRequested)
         // and is handled by whatever controller hosts this page.

@@ -23,10 +23,9 @@ namespace ui
         , projectPopupShown{false}
         , mDescriptionEdit{nullptr}
         , mReadyBtn{nullptr}
-        , mBackBtn{nullptr}
+        , mMenuBtn{nullptr}
     {
         setTitle("TRACK WORK");
-        showBackButton(true);
 
         auto* formLayout = new QFormLayout();
         setZeroMarginAndSpaceBetween(formLayout, 24);
@@ -83,19 +82,19 @@ namespace ui
         auto* footer = getFooterLayout();
 
         mReadyBtn = generateButton("Ready", "PrimaryBtn", 52, false, this);
-        mBackBtn = generateButton("Back", "SecondaryBtn", 32, true, this);
+        mMenuBtn = generateButton("Menu", "SecondaryBtn", 32, true, this);
 
         auto* buttonGroup = new QVBoxLayout();
         setZeroMarginAndSpaceBetween(buttonGroup, 12);
         buttonGroup->addWidget(mReadyBtn, 0, Qt::AlignHCenter);
-        buttonGroup->addWidget(mBackBtn, 0, Qt::AlignHCenter);
+        buttonGroup->addWidget(mMenuBtn, 0, Qt::AlignHCenter);
 
         footer->addLayout(buttonGroup);
         footer->addSpacing(32);
 
         // -- Connections
         connect(mReadyBtn, &QPushButton::clicked, this, &TrackWorkSetupPage::handleReady);
-        connect(mBackBtn, &QPushButton::clicked, this, &TrackWorkSetupPage::backRequested);
+        connect(mMenuBtn, &QPushButton::clicked, this, &BaseCardPage::menuRequested);
 
     }
 

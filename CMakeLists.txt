@@ -64,7 +64,6 @@ set(TIMETRACKER_SOURCES
         src/ui/BaseCardPage.cpp
         src/ui/TrackWorkTimerPage.cpp
         src/ui/TrackWorkSetupPage.cpp
-        src/ui/ExportPage.cpp
         src/ui/Export2.cpp
         src/ui/LogHistoryPage.cpp
         src/ui/SettingsPage.cpp

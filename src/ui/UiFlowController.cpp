@@ -19,7 +19,6 @@
 #include <algorithm>
 
 #include "Export2.h"
-#include "ExportPage.h"
 #include "appservice/AppController.h"
 #include "appservice/SessionManager.h"
 #include "infra/SessionLogRepository.h"
@@ -228,7 +227,7 @@ namespace ui
         page->setAvailableTasks(mSettings.tasks);
         page->setAvailableProjects(mSettings.projects);
 
-        connect(page, &TrackWorkSetupPage::backRequested,
+        connect(page, &BaseCardPage::menuRequested,
                 this, &UiFlowController::showMainMenu);
 
         connect(page, &TrackWorkSetupPage::readyClicked,
@@ -354,7 +353,7 @@ namespace ui
     void UiFlowController::showLogHistory()
     {
         auto* page = new LogHistoryPage(mPanel);
-        connect(page, &LogHistoryPage::backRequested,
+        connect(page, &LogHistoryPage::menuRequested,
                 this, &UiFlowController::showMainMenu);
 
         mPanel->setPage(page);
@@ -365,7 +364,7 @@ namespace ui
         auto* page = new SettingsPage(mPanel);
         page->loadFromSettings(mSettings);
 
-        connect(page, &SettingsPage::backRequested,
+        connect(page, &BaseCardPage::menuRequested,
                 this, &UiFlowController::showMainMenu);
 
         connect(page, &SettingsPage::settingsSaved,
@@ -402,7 +401,10 @@ namespace ui
         auto* page = new Export2(mPanel);
         page->setTitle("EXPORT");
 
-        connect(page, &Export2::backRequested,
+        connect(page, &Export2::settingsRequested,
+                this, &UiFlowController::showSettings);
+
+        connect(page, &Export2::menuRequested,
                 this, &UiFlowController::showMainMenu);
 
         connect(page, &Export2::exportRequested,

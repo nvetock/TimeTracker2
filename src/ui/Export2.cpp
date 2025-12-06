@@ -34,7 +34,6 @@ namespace ui
         , mMenuButton{nullptr}
     {
         setTitle("TRACK WORK");
-        showBackButton(true);
 
         auto* formatLabel = new QLabel("FORMAT", this);
         formatLabel->setObjectName("StatusLabel"); // reuse small label styling
@@ -100,7 +99,7 @@ namespace ui
         mMenuButton = generateButton("Menu", "SecondaryBtn", true, this);
         mSettingsButton = generateButton("Settings", "SecondaryBtn", true, this);
         auto* secondaryBtnGroup = new QVBoxLayout();
-        secondaryBtnGroup->setSpacing(8);
+        secondaryBtnGroup->setSpacing(4);
         secondaryBtnGroup->addWidget(mSettingsButton,    0, Qt::AlignHCenter);
         secondaryBtnGroup->addWidget(mMenuButton,    0, Qt::AlignHCenter);
 
@@ -116,6 +115,8 @@ namespace ui
             {
                 onFormatToggled(ExportFormat::Json);
             });
+        connect(mSettingsButton, &QPushButton::clicked,
+        this, &Export2::onSettingsClicked);
         connect(mMenuButton, &QPushButton::clicked,
         this, &Export2::onMenuClicked);
         connect(mAllButton, &QPushButton::clicked,
@@ -128,11 +129,11 @@ namespace ui
 
         // Set to body
         auto* body = getBodyLayout();
-        setZeroMarginAndSpaceBetween(body, 32);
+        setZeroMarginAndSpaceBetween(body, 16);
         body->setAlignment(Qt::AlignCenter);
+        body->addSpacing(16);
         body->addLayout(radioSection);
         body->addLayout(exportBtnLayout);
-        body->addStretch(1);
         body->addLayout(resultLayout);
 
         auto* footer = getFooterLayout();
@@ -369,8 +370,8 @@ namespace ui
         }
     }
 
-    void Export2::onMenuClicked()
+    void Export2::onSettingsClicked()
     {
-        emit menuRequested();
+        emit settingsRequested();
     }
 } // ui

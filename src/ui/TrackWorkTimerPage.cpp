@@ -7,6 +7,8 @@
 #include <QLineEdit>
 #include <QTimer>
 
+#include "UiElemStyler.h"
+
 
 namespace ui
 {
@@ -20,13 +22,12 @@ namespace ui
         , mStartBtn{nullptr}
         , mPauseBtn{nullptr}
         , mStopBtn{nullptr}
-        , mReturnBtn{nullptr}
+        , mMenuBtn{nullptr}
         , mUiTimer{nullptr}
         , mElapsedSeconds{0}
         , mIsPaused{false}
     {
         setTitle("NOT STARTED");
-        showBackButton(false);
 
         auto* body = getBodyLayout();
 
@@ -94,41 +95,23 @@ namespace ui
         fixedText(mProjectLabel);
         fixedText(mTaskLabel);
 
+        mStartBtn = generateButton("Start", "PrimaryBtn", 44, this);
+        mPauseBtn = generateButton("Pause", "PrimaryBtn", 44, this);
+        mPauseBtn->setVisible(false);
+        mStopBtn = generateButton("Stop", "SecondaryBtn", true, this);
+        mStopBtn->setVisible(false);
+        mMenuBtn = generateButton("Menu", "SecondaryBtn", true, this);
+
+        auto* btnLayout = new QVBoxLayout();
+        setZeroMarginAndSpaceBetween(btnLayout, 8);
+        btnLayout->addWidget(mStartBtn, 0, Qt::AlignHCenter);
+        btnLayout->addWidget(mMenuBtn, 0, Qt::AlignHCenter);
+        btnLayout->addWidget(mPauseBtn, 0, Qt::AlignHCenter);
+        btnLayout->addWidget(mStopBtn, 0, Qt::AlignHCenter);
+
         // -- Footer
         auto* footer = getFooterLayout();
-
-        mStartBtn = new QPushButton("START", this);
-        mStartBtn->setObjectName("PrimaryBtn");
-        mStartBtn->setCursor(QCursor(Qt::PointingHandCursor));
-        //mStartBtn->setFixedWidth(220);
-        mStartBtn->setFixedHeight(44);
-        mStartBtn->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-
-        mPauseBtn = new QPushButton("PAUSE", this);
-        mPauseBtn->setObjectName("PrimaryBtn");
-        mPauseBtn->setVisible(false);
-
-        mStopBtn = new QPushButton("STOP", this);
-        mStopBtn->setObjectName("SecondaryBtn");
-        mStopBtn->setFlat(true);
-        mStopBtn->setVisible(false);
-
-        mReturnBtn = new QPushButton("BACK", this);
-        mReturnBtn->setObjectName("SecondaryBtn");
-        mReturnBtn->setCursor(QCursor(Qt::PointingHandCursor));
-        //mReturnBtn->setFixedHeight(32);
-        //mReturnBtn->setFixedWidth(84);
-        mReturnBtn->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-        mReturnBtn->setFlat(true);
-
-        auto* btnGroup = new QVBoxLayout();
-        btnGroup->setSpacing(10);
-        btnGroup->setContentsMargins(0, 0, 0, 0);
-        btnGroup->addWidget(mStartBtn, 0, Qt::AlignHCenter);
-        btnGroup->addWidget(mReturnBtn, 0, Qt::AlignHCenter);
-        btnGroup->addWidget(mPauseBtn, 0, Qt::AlignHCenter);
-        btnGroup->addWidget(mStopBtn, 0, Qt::AlignHCenter);
-        footer->addLayout(btnGroup);
+        footer->addLayout(btnLayout);
         footer->addSpacing(32);
 
         // TIMER
@@ -148,8 +131,8 @@ namespace ui
         connect(mStopBtn, &QPushButton::clicked,
             this, &TrackWorkTimerPage::onStopButtonClicked);
 
-        connect(mReturnBtn, &QPushButton::clicked,
-                this, &TrackWorkTimerPage::onReturnButtonClicked);
+        connect(mMenuBtn, &QPushButton::clicked,
+                this, &BaseCardPage::onMenuClicked);
     }
 
     void TrackWorkTimerPage::applySessionStatus(timetracker::WorkSession::Status status)
@@ -166,7 +149,7 @@ namespace ui
             setEnded(false);
 
             mStartBtn->setVisible(false);
-            mReturnBtn->setVisible(false);
+            mMenuBtn->setVisible(false);
             mPauseBtn->setVisible(true);
             mStopBtn->setVisible(true);
             mPauseBtn->setText("PAUSE");
@@ -188,7 +171,7 @@ namespace ui
             setEnded(true);
 
             mStartBtn->setVisible(false);
-            mReturnBtn->setVisible(true);
+            mMenuBtn->setVisible(true);
             mPauseBtn->setVisible(false);
             mStopBtn->setVisible(false);
             break;
@@ -201,7 +184,7 @@ namespace ui
             setEnded(true);
 
             mStartBtn->setVisible(false);
-            mReturnBtn->setVisible(true);
+            mMenuBtn->setVisible(true);
             mPauseBtn->setVisible(false);
             mStopBtn->setVisible(false);
         default:
@@ -224,11 +207,6 @@ namespace ui
     void TrackWorkTimerPage::onStopButtonClicked()
     {
         emit stopClicked();
-    }
-
-    void TrackWorkTimerPage::onReturnButtonClicked()
-    {
-        emit returnClicked();
     }
 
     void TrackWorkTimerPage::onUiTick()

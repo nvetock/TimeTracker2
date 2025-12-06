@@ -38,15 +38,13 @@ namespace ui
         void setTitle(const QString& title);
         QLabel* getTitleLabel() const { return mTitleLabel; }
 
-        void showBackButton(bool show) const;
-        QPushButton* getBackButton() const { return mBackChevron; }
-
         SideTab* getSideTab() const { return mSideTab; }
 
+    public slots:
+        void onMenuClicked();
+
     signals:
-        void backRequested();
-
-
+        void menuRequested();
 
     private:
         void buildShell();
@@ -59,7 +57,6 @@ namespace ui
         // Header Items
         QHBoxLayout* mTopHeaderRow;
         QVBoxLayout* mHeaderLayout;
-        QPushButton* mBackChevron;
         QLabel* mTitleLabel;
         QFrame* mHeaderRule;
 

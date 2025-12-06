@@ -9,7 +9,6 @@ namespace ui
         : BaseCardPage(parent)
     {
         setTitle("LOG HISTORY");
-        showBackButton(true);
 
         auto* body = getBodyLayout();
         auto* label = new QLabel("Log history UI goes here.", this);

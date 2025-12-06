@@ -13,6 +13,8 @@
 #include <qstyle.h>
 
 #include "GradientFrame.h"
+#include "UiElemStyler.h"
+#include "UiFlowController.h"
 
 namespace ui
 {
@@ -25,7 +27,6 @@ namespace ui
 
         , mTopHeaderRow{nullptr}
         , mHeaderLayout{nullptr}
-        , mBackChevron{nullptr}
         , mTitleLabel{nullptr}
         , mHeaderRule{nullptr}
 
@@ -35,6 +36,8 @@ namespace ui
     {
         setAttribute(Qt::WA_TranslucentBackground);
         buildShell();
+
+
     }
 
     void BaseCardPage::setRecordingActive(bool active)
@@ -101,19 +104,11 @@ namespace ui
 
     // --- Header layout (CREATE IT) ---------------------------------------
     mHeaderLayout = new QVBoxLayout();
-    mHeaderLayout->setContentsMargins(0, 0, 0, 0);
-    mHeaderLayout->setSpacing(4);
+    setZeroMarginAndSpaceBetween(mHeaderLayout, 4);
 
     // Title + Header row
     mTopHeaderRow = new QHBoxLayout;
-    mTopHeaderRow->setContentsMargins(0, 0, 0, 0);
-    mTopHeaderRow->setSpacing(0);
-
-    mBackChevron = new QPushButton(QStringLiteral("<<"), mMainCard);
-    mBackChevron->setObjectName("HeaderBackChevron");
-    mBackChevron->setFlat(true);
-    mBackChevron->setCursor(Qt::PointingHandCursor);
-    mBackChevron->setFixedSize(24,24);
+    setZeroMarginAndSpaceBetween(mTopHeaderRow, 0);
 
     mTitleLabel = new QLabel("UNTITLED", mMainCard);
     mTitleLabel->setObjectName("PageTitleLabel");
@@ -125,9 +120,6 @@ namespace ui
     mHeaderRule->setFrameShadow(QFrame::Plain);
     mHeaderRule->setLineWidth(1);
 
-    mBackChevron->setVisible(false);
-
-    mTopHeaderRow->addWidget(mBackChevron, 0, Qt::AlignLeft | Qt::AlignVCenter);
     mTopHeaderRow->addWidget(mTitleLabel);
     //mTopHeaderRow->addStretch();
 
@@ -137,36 +129,31 @@ namespace ui
     mCardLayout->addLayout(mHeaderLayout);
     mCardLayout->setSpacing(12);
 
-    QObject::connect(mBackChevron, &QPushButton::clicked,
-                     this, &BaseCardPage::backRequested);
-
     // Body content
     mBodyLayout = new QVBoxLayout();
-    mBodyLayout->setContentsMargins(0, 0, 0, 0);
-    mBodyLayout->setSpacing(0);
+    setZeroMarginAndSpaceBetween(mBodyLayout, 0);
     mCardLayout->addLayout(mBodyLayout);
     mCardLayout->addStretch(); // push footer to bottom
 
     // Footer
     mFooterLayout = new QVBoxLayout();
-    mFooterLayout->setContentsMargins(0, 12, 0, 0);
-    mFooterLayout->setSpacing(0);
+    setZeroMarginAndSpaceBetween(mFooterLayout, 0);
     mCardLayout->addLayout(mFooterLayout);
 
     // Attach main card to ROOT
     mRootLayout->addWidget(mMainCard);
 }
 
-    void BaseCardPage::showBackButton(const bool show) const
+void BaseCardPage::setTitle(const QString& title)
+{
+    if (mTitleLabel)
     {
-        if (mBackChevron) mBackChevron->setVisible(show);
+        mTitleLabel->setText(title.toUpper());
     }
+}
 
-    void BaseCardPage::setTitle(const QString& title)
+void BaseCardPage::onMenuClicked()
     {
-        if (mTitleLabel)
-        {
-            mTitleLabel->setText(title.toUpper());
-        }
+        emit menuRequested();
     }
 } // ui
