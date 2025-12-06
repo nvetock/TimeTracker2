@@ -8,6 +8,8 @@
 #include <QFileDialog>
 #include <QCursor>
 
+#include "UiElemStyler.h"
+
 namespace ui
 {
     SettingsPage::SettingsPage(QWidget* parent)
@@ -16,7 +18,6 @@ namespace ui
         setTitle("SETTINGS");
 
         auto* body   = getBodyLayout();
-        auto* footer = getFooterLayout();
 
         // --- Form area ----------------------------------------------------
         auto* formLayout = new QFormLayout();
@@ -70,19 +71,17 @@ namespace ui
         body->addStretch();
 
         // --- Footer: Save button + maybe Cancel/Back ----------------------
-        mSaveBtn = new QPushButton(tr("SAVE"), this);
-        mSaveBtn->setObjectName("PrimaryButton");
-        mSaveBtn->setCursor(Qt::PointingHandCursor);
-        mSaveBtn->setFixedHeight(44);
-        mSaveBtn->setFixedWidth(220);
+        mSaveBtn = generateButton("Save", "PrimaryBtn", 44, this);
+        mMenuBtn = generateButton("Menu", "SecondaryBtn", true, this);
 
-        auto* saveGroup = new QVBoxLayout();
-        saveGroup->setContentsMargins(0, 0, 0, 0);
-        saveGroup->setSpacing(8);
+        auto* btnLayout = new QVBoxLayout();
+        setZeroMarginAndSpaceBetween(btnLayout, 0);
+        btnLayout->addWidget(mSaveBtn, 0, Qt::AlignHCenter);
+        btnLayout->addWidget(mMenuBtn, 0, Qt::AlignHCenter);
 
-        saveGroup->addWidget(mSaveBtn, 0, Qt::AlignHCenter);
-
-        footer->addLayout(saveGroup);
+        auto* footer = getFooterLayout();
+        footer->addLayout(btnLayout);
+        footer->addSpacing(32);
 
         // --- Connections --------------------------------------------------
         connect(mBrowseBtn, &QPushButton::clicked,
@@ -96,6 +95,9 @@ namespace ui
 
         connect(mResetProjectsBtn, &QPushButton::clicked,
                 this, &SettingsPage::handleResetProjects);
+
+        connect(mMenuBtn, &QPushButton::clicked,
+            this, &SettingsPage::onMenuClicked);
 
 
         // The back chevron signal comes from BaseCardPage (backRequested)

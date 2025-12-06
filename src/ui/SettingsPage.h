@@ -39,5 +39,6 @@ namespace ui
         QPushButton* mSaveBtn{nullptr};
         QPushButton* mResetTasksBtn{nullptr};
         QPushButton* mResetProjectsBtn{nullptr};
+        QPushButton* mMenuBtn{nullptr};
     };
 }
