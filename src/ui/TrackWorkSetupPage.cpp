@@ -27,8 +27,7 @@ namespace ui
     {
         setTitle("TRACK WORK");
 
-        auto* formLayout = new QFormLayout();
-        setZeroMarginAndSpaceBetween(formLayout, 24);
+
 
         // Date
         mDate = new QLabel(QDate::currentDate().toString(), this);
@@ -44,7 +43,6 @@ namespace ui
         taskLayout->addWidget(mTaskCombo);
         taskLayout->addWidget(taskArrow);
 
-
         // Project combo
         auto* projRow = new QWidget(this);
         auto* projLayout = new QHBoxLayout(projRow);
@@ -54,7 +52,6 @@ namespace ui
         auto* projArrow = generateIcon(":/icons/resources/icons/arrow_down.svg", projRow, "ComboArrowIcon", 16);
         projLayout->addWidget(mProjectCombo);
         projLayout->addWidget(projArrow);
-
 
         connect(taskArrow, &ClickableSvgWidget::clicked,
                 mTaskCombo, &QComboBox::showPopup);
@@ -67,30 +64,32 @@ namespace ui
         mDescriptionEdit->setObjectName("DescriptionEdit");
         mDescriptionEdit->setText("Set a work description...");
 
-
         // Labels on the left, widgets on the right
+        auto* formLayout = new QFormLayout();
+        setZeroMarginAndSpaceBetween(formLayout, 16);
+        formLayout->setAlignment(Qt::AlignVCenter);
         formLayout->addRow(tr("DATE"), mDate);
         formLayout->addRow(tr("TASK"), taskRow);
         formLayout->addRow(tr("PROJECT"), projRow);
         formLayout->addRow(QString(), mDescriptionEdit);
 
         auto* body = getBodyLayout();
+        body->addSpacing(16);
         body->addLayout(formLayout);
-        body->addStretch();
 
         // -- Footer
         auto* footer = getFooterLayout();
 
-        mReadyBtn = generateButton("Ready", "PrimaryBtn", 52, false, this);
-        mMenuBtn = generateButton("Menu", "SecondaryBtn", 32, true, this);
+        mReadyBtn = generateButton("Ready", "PrimaryBtn", 44, this);
+        mMenuBtn = generateButton("Menu", "SecondaryBtn", true, this);
 
         auto* buttonGroup = new QVBoxLayout();
-        setZeroMarginAndSpaceBetween(buttonGroup, 12);
+        setZeroMarginAndSpaceBetween(buttonGroup, 4);
         buttonGroup->addWidget(mReadyBtn, 0, Qt::AlignHCenter);
         buttonGroup->addWidget(mMenuBtn, 0, Qt::AlignHCenter);
 
         footer->addLayout(buttonGroup);
-        footer->addSpacing(32);
+        footer->addSpacing(16);
 
         // -- Connections
         connect(mReadyBtn, &QPushButton::clicked, this, &TrackWorkSetupPage::handleReady);

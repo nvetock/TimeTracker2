@@ -29,61 +29,27 @@ namespace ui
     {
         setTitle("NOT STARTED");
 
-        auto* body = getBodyLayout();
-
-        mTimerLabel = new QLabel("00:00:00", this);
-        mTimerLabel->setObjectName("TimerLabel");
-        mTimerLabel->setAlignment(Qt::AlignCenter);
-
-        // Date
+        mTimerLabel = generateLabel("00:00:00", "TimerLabel", "center", false, this);
         QDate date = QDate::currentDate();
-        mDateLabel = new QLabel(date.toString(), this);
-        mDateLabel->setObjectName("DateLabel");
-        mDateLabel->setAlignment(Qt::AlignCenter);
-
-        // Project Title
-        mProjectLabel = new QLabel("AI SKILLS FUNDAMENTALS\nCERTIFICATE", this);
-        mProjectLabel->setObjectName("ProjectLabel");
-        mProjectLabel->setAlignment(Qt::AlignCenter);
-        mProjectLabel->setWordWrap(true);
-
-        // Group Date + Project
-        auto* dpGroup = new QVBoxLayout();
-        dpGroup->setSpacing(2);
-        dpGroup->setContentsMargins(0, 0, 0, 0);
-        dpGroup->addWidget(mDateLabel);
-        dpGroup->addWidget(mProjectLabel);
-
-        // Group Timer + dpGroup
-        auto* tdpGroup = new QVBoxLayout();
-        tdpGroup->setSpacing(0);
-        tdpGroup->setContentsMargins(0, 0, 0, 0);
-        tdpGroup->addWidget(mTimerLabel);
-        tdpGroup->addLayout(dpGroup);
-
-        // Task Title
-        mTaskLabel = new QLabel(
-    "Long task name appears like\n"
-            "this on the device UI screen\n"
-            "when it goes to three lines.",
-            this
-        );
-        mTaskLabel->setObjectName("TaskLabel");
-        mTaskLabel->setAlignment(Qt::AlignCenter);
-        mTaskLabel->setWordWrap(true);
-
+        mDateLabel = generateLabel(date.toString(), "DateLabel", "center", false, this);
+        mProjectLabel = generateLabel("AI SKILLS FUNDAMENTALS\nCERTIFICATE", "ProjectLabel", "center", true, this);
+        mTaskLabel = generateLabel("description...", "TaskLabel", "center", true, this);
         mDescription = new InlineEditableLabel(this);
         mDescription->setObjectName("DescriptionLabel");
 
-        auto* tdpttGroup = new QVBoxLayout();
-        tdpttGroup->setSpacing(24);
-        tdpttGroup->setContentsMargins(0, 0, 0, 0);
-        tdpttGroup->addLayout(tdpGroup);
-        tdpttGroup->addWidget(mTaskLabel);
-        tdpttGroup->addWidget(mDescription);
-
         // Add to body area
-        body->addLayout(tdpttGroup);
+        auto* body = getBodyLayout();
+        body->addWidget(mTimerLabel);
+        body->addSpacing(0);
+        body->addWidget(mDateLabel);
+        body->addSpacing(8);
+        body->addWidget(mProjectLabel);
+        body->addSpacing(2);
+        body->addWidget(mTaskLabel);
+        body->addSpacing(16);
+        body->addWidget(mDescription);
+
+
         auto fixedText = [](QLabel* label)
         {
             label->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
@@ -103,7 +69,7 @@ namespace ui
         mMenuBtn = generateButton("Menu", "SecondaryBtn", true, this);
 
         auto* btnLayout = new QVBoxLayout();
-        setZeroMarginAndSpaceBetween(btnLayout, 8);
+        setZeroMarginAndSpaceBetween(btnLayout, 4);
         btnLayout->addWidget(mStartBtn, 0, Qt::AlignHCenter);
         btnLayout->addWidget(mMenuBtn, 0, Qt::AlignHCenter);
         btnLayout->addWidget(mPauseBtn, 0, Qt::AlignHCenter);
@@ -112,7 +78,7 @@ namespace ui
         // -- Footer
         auto* footer = getFooterLayout();
         footer->addLayout(btnLayout);
-        footer->addSpacing(32);
+        footer->addSpacing(16);
 
         // TIMER
         mUiTimer = new QTimer(this);
@@ -132,7 +98,7 @@ namespace ui
             this, &TrackWorkTimerPage::onStopButtonClicked);
 
         connect(mMenuBtn, &QPushButton::clicked,
-                this, &BaseCardPage::onMenuClicked);
+                this, &TrackWorkTimerPage::onMenuClicked);
     }
 
     void TrackWorkTimerPage::applySessionStatus(timetracker::WorkSession::Status status)

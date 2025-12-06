@@ -32,7 +32,6 @@ namespace ui
         void startClicked();
         void pauseClicked();
         void stopClicked();
-        void returnClicked();
 
     private slots:
         void onStartButtonClicked();

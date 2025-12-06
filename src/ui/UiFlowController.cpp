@@ -277,8 +277,8 @@ namespace ui
         page->setTaskText(task);
         page->setDescriptionText(description);
 
-        connect(page, &TrackWorkTimerPage::returnClicked,
-                this, &UiFlowController::showTrackWorkSetup);
+        connect(page, &TrackWorkTimerPage::menuRequested,
+                this, &UiFlowController::showMainMenu);
 
         connect(page, &TrackWorkTimerPage::startClicked,
                 this, [this, task, project, description]()
@@ -326,22 +326,6 @@ namespace ui
                         page->applySessionStatus(session.getStatus());
                     });
         }
-
-        /*
-        // Connect hard stop to UI text
-        if (mAppController)
-        {
-            connect(mAppController, &timetracker::AppController::hardStopExecuted,
-                page, [page](const timetracker::WorkSession& session)
-            {
-                if (session.getStatus() == timetracker::WorkSession::Status::Timeout)
-                {
-                    page->setTitle("TIMEOUT");
-                    page->setRecordingActive(false);
-                }
-            });
-        }
-        */
 
         // Here is where you'd hook page->startClicked() to AppController
         // and also a STOP button to stop the session, etc.

@@ -16,69 +16,45 @@ namespace ui
         auto* body   = getBodyLayout();
 
         // Minimal body – could be logo / tagline
-        auto* titleLabel = new QLabel("What would you like to do?", this);
-        titleLabel->setObjectName("BodyCopy");
-        titleLabel->setAlignment(Qt::AlignCenter);
+        auto* titleLabel = generateLabel("What would you like to do?", "BodyCopy", "center", true, this);
 
-        body->addStretch();
-        body->addSpacing(48);
+        body->addSpacing(24);
         body->addWidget(titleLabel);
-        body->addSpacing(64);
+        body->addSpacing(32);
 
-        // Footer: main actions
-        mTrackWorkBtn = new QPushButton(tr("TRACK WORK"), this);
-        mTrackWorkBtn->setObjectName("PrimaryBtn");
-        mTrackWorkBtn->setFixedHeight(44);
-        // mTrackWorkBtn->setFixedWidth(220);
+        mTrackWorkBtn = generateButton("Track Work", "PrimaryBtn", 44, this);
+        mLogHistoryBtn = generateButton("Log History", "PrimaryBtn", 44, this);
+        mExportBtn = generateButton("Export", "PrimaryBtn", 44, this);
 
-        mLogHistoryBtn = new QPushButton(tr("LOG HISTORY"), this);
-        mLogHistoryBtn->setObjectName("PrimaryBtn");
-        mLogHistoryBtn->setFixedHeight(44);
-        // mLogHistoryBtn->setFixedWidth(220);
+        mSettingsBtn = generateButton("Settings", "SecondaryBtn", true, this);
 
-        mExportBtn = new QPushButton(tr("EXPORT"), this);
-        mExportBtn->setObjectName("PrimaryBtn");
-        mExportBtn->setFixedHeight(44);
-        // mExportBtn->setFixedWidth(220);
+        mQuitBtn = generateButton("Quit", "SecondaryBtn", true, this);
 
-        mSettingsBtn = new QPushButton(tr("SETTINGS"), this);
-        mSettingsBtn->setObjectName("SecondaryBtn");
-        mSettingsBtn->setFixedHeight(44);
-        // mSettingsBtn->setFixedWidth(220);
-        mSettingsBtn->setFlat(true);
-
-        mQuitBtn = new QPushButton(tr("QUIT"), this);
-        mQuitBtn->setObjectName("SecondaryBtn");
-        mQuitBtn->setFlat(true);
-
-        auto* mainBtnGroup = new QVBoxLayout();
-        setZeroMarginAndSpaceBetween(mainBtnGroup, 16);
+            auto* mainBtnGroup = new QVBoxLayout();
+        setZeroMarginAndSpaceBetween(mainBtnGroup, 10);
         mainBtnGroup->addWidget(mTrackWorkBtn,   0, Qt::AlignHCenter);
         mainBtnGroup->addWidget(mLogHistoryBtn,  0, Qt::AlignHCenter);
         mainBtnGroup->addWidget(mExportBtn,      0, Qt::AlignHCenter);
         body->addLayout(mainBtnGroup);
+
         auto* secondaryBtnGroup = new QVBoxLayout();
-        setZeroMarginAndSpaceBetween(secondaryBtnGroup, 8);
+        secondaryBtnGroup->setSpacing(4);
         secondaryBtnGroup->addWidget(mSettingsBtn,    0, Qt::AlignHCenter);
         secondaryBtnGroup->addWidget(mQuitBtn,        0, Qt::AlignHCenter);
 
         auto* footer = getFooterLayout();
         footer->addLayout(secondaryBtnGroup);
-        footer->addSpacing(32);
+        footer->addSpacing(16);
 
         // Signals
         connect(mTrackWorkBtn,  &QPushButton::clicked,
                 this,           &MainMenuPage::trackWorkRequested);
-
         connect(mLogHistoryBtn, &QPushButton::clicked,
                 this,           &MainMenuPage::logHistoryRequested);
-
         connect(mExportBtn,     &QPushButton::clicked,
                 this,           &MainMenuPage::exportRequested);
-
         connect(mSettingsBtn,   &QPushButton::clicked,
                 this,           &MainMenuPage::settingsRequested);
-
         connect(mQuitBtn,       &QPushButton::clicked,
                 this,           &MainMenuPage::quitRequested);
     }

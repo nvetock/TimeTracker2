@@ -11,7 +11,7 @@ namespace ui
 
         auto* layout = new QHBoxLayout(this);
         layout->setContentsMargins(0, 0, 0, 0);
-        layout->setSpacing(0);  // small gap between pencil + text
+        layout->setSpacing(8);  // small gap between pencil + text
 
         setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
         setMinimumWidth(240);

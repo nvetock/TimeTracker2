@@ -39,8 +39,8 @@ namespace ui
         formatLabel->setObjectName("StatusLabel"); // reuse small label styling
         formatLabel->setAlignment(Qt::AlignCenter);
 
-        mCsvRadio = generateButton("CSV", "RadioBtn", 44, true, this);
-        mJsonRadio = generateButton("Json", "RadioBtn", 44, true, this);
+        mCsvRadio = generateButton("CSV", "RadioBtn", 32, true, this);
+        mJsonRadio = generateButton("Json", "RadioBtn", 32, true, this);
 
         mCsvRadio->setChecked(true);
         auto* radioBtnLayout = new QHBoxLayout();
@@ -61,13 +61,15 @@ namespace ui
 
         // EXPORT BUTTONS
 
-        auto* Export = new QLabel("EXPORT", this);
+        auto* Export = generateLabel("Export", "StatusLabel", "center", false, this);
+
+            new QLabel("EXPORT", this);
         Export->setObjectName("StatusLabel"); // reuse small label styling
         Export->setAlignment(Qt::AlignCenter);
 
-        mAllButton = generateButton("All Logs", "PrimaryBtn", 44, this);
-        mSingleButton = generateButton("Single Date", "PrimaryBtn", 44, this);
-        mRangeButton = generateButton("Date Range", "PrimaryBtn", 44, this);
+        mAllButton = generateButton("All Logs", "PrimaryBtn", 40, this);
+        mSingleButton = generateButton("Single Date", "PrimaryBtn", 40, this);
+        mRangeButton = generateButton("Date Range", "PrimaryBtn", 40, this);
 
         auto* exportBtnLayout = new QVBoxLayout();
         setZeroMarginAndSpaceBetween(exportBtnLayout, 8);
@@ -79,7 +81,7 @@ namespace ui
 
 
         // RESULT AREA
-        mResultIcon = generateIcon(":/icons/resources/icons/check_circle.svg", this, "ExportResultIcon", 32);
+        mResultIcon = generateIcon(":/icons/resources/icons/check_circle.svg", this, "ExportResultIcon", 20);
         mResultIcon->hide();
 
         mResultLabel = new QLabel("", this);
@@ -131,14 +133,14 @@ namespace ui
         auto* body = getBodyLayout();
         setZeroMarginAndSpaceBetween(body, 16);
         body->setAlignment(Qt::AlignCenter);
-        body->addSpacing(16);
+        body->addSpacing(8);
         body->addLayout(radioSection);
         body->addLayout(exportBtnLayout);
         body->addLayout(resultLayout);
 
         auto* footer = getFooterLayout();
         footer->addLayout(secondaryBtnGroup);
-        footer->addSpacing(32);
+        footer->addSpacing(16);
     }
 
     void Export2::showExportResult(bool success, const QString& message)

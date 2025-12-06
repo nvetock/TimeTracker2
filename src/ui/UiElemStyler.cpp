@@ -58,19 +58,34 @@ namespace ui
         return btn;
     }
 
-    class QPushButton* generateButton(const QString& buttonText, const QString& className, int height, const bool isCheckable,
+    class QPushButton* generateButton(const QString& buttonText, const QString& className, const int height, const bool isCheckable,
         QWidget* parent)
     {
         auto* btn = new QPushButton(buttonText.toUpper(), parent);
         btn->setObjectName(className);
         btn->setCursor(Qt::PointingHandCursor);
-        btn->setMinimumHeight(44);
         btn->setMaximumHeight(height);
         btn->setCheckable(isCheckable);
         btn->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 
         return btn;
     }
+
+    QLabel* generateLabel(const QString& labelText, const QString& className, const QString& alignment,
+        bool wordWrap, QWidget* parent)
+    {
+        auto* label = new QLabel(labelText, parent);
+        label->setObjectName(className);
+
+        if (alignment == "center") label->setAlignment(Qt::AlignCenter);
+        else if (alignment == "left") label->setAlignment(Qt::AlignLeft);
+        else if (alignment == "right") label->setAlignment(Qt::AlignRight);
+
+        label->setWordWrap(wordWrap);
+
+        return label;
+    }
+
 
     void comboBoxStyler(QComboBox& comboBox, const QString& className, const QString& placeholderText, const bool editable)
     {

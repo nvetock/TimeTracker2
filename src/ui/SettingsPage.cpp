@@ -48,20 +48,13 @@ namespace ui
 
         // Reset buttons row
         auto* resetRow = new QHBoxLayout();
-        resetRow->setContentsMargins(0, 0, 0, 0);
-        resetRow->setSpacing(8);
+        setZeroMarginAndSpaceBetween(resetRow, 8);
 
-        mResetTasksBtn = new QPushButton(tr("Reset tasks"), this);
-        mResetTasksBtn->setObjectName("SettingsResetTasksButton");
-        mResetTasksBtn->setCursor(Qt::PointingHandCursor);
-
-        mResetProjectsBtn = new QPushButton(tr("Reset projects"), this);
-        mResetProjectsBtn->setObjectName("SettingsResetProjectsButton");
-        mResetProjectsBtn->setCursor(Qt::PointingHandCursor);
+        mResetTasksBtn = generateButton("Reset Tasks", "SecondaryBtn", 16, this);
+        mResetProjectsBtn = generateButton("Reset Projects", "SecondaryBtn", 16, this);
 
         resetRow->addWidget(mResetTasksBtn);
         resetRow->addWidget(mResetProjectsBtn);
-        resetRow->addStretch();
 
         formLayout->addRow(tr("NAME"), mNameEdit);
         formLayout->addRow(tr("SAVE LOCATION"), saveDirRow);
@@ -81,7 +74,7 @@ namespace ui
 
         auto* footer = getFooterLayout();
         footer->addLayout(btnLayout);
-        footer->addSpacing(32);
+        footer->addSpacing(4);
 
         // --- Connections --------------------------------------------------
         connect(mBrowseBtn, &QPushButton::clicked,

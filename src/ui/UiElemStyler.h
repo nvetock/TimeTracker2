@@ -49,6 +49,12 @@ namespace ui
                                            bool isCheckable = true,
                                            QWidget* parent = nullptr);
 
+    class QLabel* generateLabel(const QString& labelText,
+                                const QString& className,
+                                const QString& alignment,
+                                bool wordWrap = false,
+                                QWidget* parent = nullptr);
+
     // --------------------------------
     // TrackWorkSetupPage
     // --------------------------------
