@@ -14,25 +14,30 @@ namespace ui
     {
         Q_OBJECT
     public:
+        enum class ExportFormat { Csv, Json };
+
         explicit Export2(QWidget* parent = nullptr);
 
     signals:
-        void backRequested();
+        void menuRequested();
 
         void exportRequested(const QString& format,
                              const QDate& fromDate,
                              const QDate& toDate);
 
     private slots:
-        void onCsvToggled(bool checked);
-        void onJsonToggled(bool checked);
+        void onFormatToggled(ExportFormat type);
         void onAllClicked();
         void onRangeClicked();
-        void onDayClicked();
+        void onSingleClicked();
 
-        void onBackClicked();
+        void onMenuClicked();
 
     private:
+        QString exportFormatToString(const ExportFormat f);
+        void exportDates(const QDate& from, const QDate& to);
+    private:
+        ExportFormat mExportFormat;
         QPushButton* mCsvRadio;
         QPushButton* mJsonRadio;
         QPushButton* mAllButton;
@@ -40,6 +45,5 @@ namespace ui
         QPushButton* mRangeButton;
         QPushButton* mSettingsButton;
         QPushButton* mMenuButton;
-
     };
 } // ui

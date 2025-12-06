@@ -4,6 +4,8 @@
 #include <QVBoxLayout>
 #include <QLabel>
 
+#include "UiElemStyler.h"
+
 namespace ui
 {
     MainMenuPage::MainMenuPage(QWidget* parent)
@@ -51,14 +53,13 @@ namespace ui
         mQuitBtn->setFlat(true);
 
         auto* mainBtnGroup = new QVBoxLayout();
-        mainBtnGroup->setContentsMargins(0, 0, 0, 0);
-        mainBtnGroup->setSpacing(16);
+        setZeroMarginAndSpaceBetween(mainBtnGroup, 16);
         mainBtnGroup->addWidget(mTrackWorkBtn,   0, Qt::AlignHCenter);
         mainBtnGroup->addWidget(mLogHistoryBtn,  0, Qt::AlignHCenter);
         mainBtnGroup->addWidget(mExportBtn,      0, Qt::AlignHCenter);
         body->addLayout(mainBtnGroup);
         auto* secondaryBtnGroup = new QVBoxLayout();
-        secondaryBtnGroup->setSpacing(8);
+        setZeroMarginAndSpaceBetween(secondaryBtnGroup, 8);
         secondaryBtnGroup->addWidget(mSettingsBtn,    0, Qt::AlignHCenter);
         secondaryBtnGroup->addWidget(mQuitBtn,        0, Qt::AlignHCenter);
 

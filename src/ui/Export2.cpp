@@ -1,13 +1,18 @@
 #include "Export2.h"
+#include "Export2.h"
 
 #include <QComboBox>
 #include <QDate>
-#include <qgridlayout.h>
 #include <QRadioButton>
 #include <QPushButton>
 #include <QHBoxLayout>
 #include <QButtonGroup>
+#include <QDateEdit>
 #include <QLabel>
+#include <QCalendarWidget>
+#include <QDialog>
+#include <QDialogButtonBox>
+#include <QGridLayout>
 
 #include "InlineEditableLabel.h"
 #include "UiElemStyler.h"
@@ -16,9 +21,14 @@ namespace ui
 {
     Export2::Export2(QWidget* parent)
         : BaseCardPage{parent}
+        , mExportFormat{ExportFormat::Csv}
         , mCsvRadio{nullptr}
         , mJsonRadio{nullptr}
         , mAllButton{nullptr}
+        , mSingleButton{nullptr}
+        , mRangeButton{nullptr}
+        , mSettingsButton{nullptr}
+        , mMenuButton{nullptr}
     {
         setTitle("TRACK WORK");
         showBackButton(true);
@@ -30,6 +40,7 @@ namespace ui
         mCsvRadio = generateButton("CSV", "RadioBtn", 44, true, this);
         mJsonRadio = generateButton("Json", "RadioBtn", 44, true, this);
 
+        mCsvRadio->setChecked(true);
         auto* radioBtnLayout = new QHBoxLayout();
         auto* radioBtnGroup = new QButtonGroup(radioBtnLayout);
         radioBtnGroup->setExclusive(true);
@@ -75,18 +86,24 @@ namespace ui
 
 
         // CONNECTIONS
-
         connect(mCsvRadio, &QRadioButton::toggled,
-            this, &Export2::onCsvToggled);
+            this, [this]()
+            {
+                onFormatToggled(ExportFormat::Csv);
+            });
         connect(mJsonRadio, &QRadioButton::toggled,
-            this, &Export2::onJsonToggled);
-
-
-        if (auto* headerBack = getBackButton())
-        {
-            connect(headerBack, &QPushButton::clicked,
-                    this, &Export2::onBackClicked);
-        }
+        this, [this]()
+            {
+                onFormatToggled(ExportFormat::Json);
+            });
+        connect(mMenuButton, &QPushButton::clicked,
+        this, &Export2::onMenuClicked);
+        connect(mAllButton, &QPushButton::clicked,
+            this, &Export2::onAllClicked);
+        connect(mSingleButton, &QPushButton::clicked,
+            this, &Export2::onSingleClicked);
+        connect(mRangeButton, &QPushButton::clicked,
+            this, &Export2::onRangeClicked);
 
 
         // Set to body
@@ -101,40 +118,75 @@ namespace ui
         footer->addSpacing(32);
     }
 
-    void Export2::onCsvToggled(const bool checked)
+    QString Export2::exportFormatToString(const ExportFormat f)
     {
-        if (!checked) return;
-
-        // makes this whole button selected
+        switch (f)
+        {
+        case ExportFormat::Csv:
+        default:
+            return "csv";
+        case ExportFormat::Json:
+            return "json";
+        }
     }
 
-    void Export2::onJsonToggled(const bool checked)
+    void Export2::exportDates(const QDate& from, const QDate& to)
     {
-        if (!checked) return;
+        const QString f = exportFormatToString(mExportFormat);
+        emit exportRequested(f, from, to);
+    }
 
-        // makes this whole button selected
+    void Export2::onFormatToggled(const ExportFormat type)
+    {
+        mExportFormat = type;
+        qDebug() << "changing format to"
+                 << exportFormatToString(mExportFormat);
     }
 
     void Export2::onAllClicked()
     {
-        // Handle export all logs
-        return;
+        const QString format = exportFormatToString(mExportFormat);
+        constexpr QDate from = QDate();
+        constexpr QDate to = QDate();
+
+        emit exportRequested(format, from, to);
     }
 
     void Export2::onRangeClicked()
     {
-        // Display calendar and look for from & to date set & submit
-        return;
+        // show calendar with an export button
     }
 
-    void Export2::onDayClicked()
+    void Export2::onSingleClicked()
     {
+        // show calendar with an export button
         // Display calendar and look for single day set & submit
-        return;
+        QDialog dialog(this);
+        dialog.setWindowTitle(tr("Export Single Date"));
+        auto* layout = new QVBoxLayout(&dialog);
+        auto* cal = new QCalendarWidget(&dialog);
+        cal->setSelectedDate(QDate::currentDate());
+        layout->addWidget(cal);
+
+        auto* buttons = new QDialogButtonBox(
+            QDialogButtonBox::Cancel | QDialogButtonBox::Ok, &dialog
+        );
+        buttons->button(QDialogButtonBox::Ok)->setText("Export");
+        layout->addWidget(buttons);
+
+        connect(buttons, &QDialogButtonBox::accepted, &dialog, &QDialog::accept);
+        connect(buttons, &QDialogButtonBox::rejected, &dialog, &QDialog::reject);
+
+        if (dialog.exec() == QDialog::Accepted)
+        {
+            const QDate date = cal->selectedDate();
+            const QString format = exportFormatToString(mExportFormat);
+            emit exportRequested(format, date, date);
+        }
     }
 
-    void Export2::onBackClicked()
+    void Export2::onMenuClicked()
     {
-        emit backRequested();
+        emit menuRequested();
     }
 } // ui
